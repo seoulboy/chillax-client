@@ -1,0 +1,23 @@
+.nav-container {
+  ul {
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0 auto;
+    list-style: none;
+    position: relative;
+    li {
+      margin: 0 10px;
+      display: inline-block;
+      color: white;
+      a {
+        color: white;
+      }
+    }
+    .sign-in-out {
+      position: absolute;
+      right: 1px;
+    }
+  }
+}
