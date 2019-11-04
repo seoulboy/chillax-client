@@ -8,7 +8,6 @@ const Home = props => {
   const [showTodaysMusicPlayer, setShowTodaysMusicPlayer] = useState(false);
   const [todaysMusicTitle, setTodaysMusicTitle] = useState('');
   const [isPlayingSound, setIsPlayingSound] = useState(false);
-  const [volume, setVolume] = useState(0);
   const todaysMusicVideoId = '7ZguAEoNpZw';
 
   useEffect(() => {
@@ -37,23 +36,28 @@ const Home = props => {
       audioPlayer.current.play();
     }
   };
+
+  const setVolume = volume => {
+    audioPlayer.current.volume = volume;
+  };
+  
   return (
     <div id='home-container'>
       <div id='default-audioplayer-skin'>
         <button
           id='play-button'
-          className={isPlayingSound ? 'main-play' : 'main-pause'}
+          className={isPlayingSound ? 'main-pause' : 'main-play'}
           onClick={() => playAudio()}
         ></button>
         <input
           id='range-volume'
           type='range'
-          onInput={setVolume(this.value)}
-          onChange={setVolume(this.value)}
+          onInput={event => setVolume(event.target.value)}
+          onChange={event => setVolume(event.target.value)}
           min='0'
           max='1'
           step='0.01'
-          value='1'
+          defaultValue='1'
         />
       </div>
       <audio
