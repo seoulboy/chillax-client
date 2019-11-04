@@ -1,0 +1,37 @@
+$text-color: white;
+
+#home-container {
+
+  #default-audioplayer-skin {
+    #play-button {
+      height: 130px;
+      width: 130px;
+      border: none;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      outline: none;
+    }
+
+    .main-play {
+      background: url('https://rainymood.com/i/play4.png');
+    }
+
+    .main-pause {
+      background: url('https://rainymood.com/i/pause4.png');
+    }
+  }
+  h1 {
+    color: $text-color;
+  }
+
+  .todays-music {
+    color: $text-color;
+    button {
+      background: none;
+      border: none;
+    }
+  }
+
+  
+}

@@ -6,7 +6,7 @@ import {
   Redirect,
 } from 'react-router-dom';
 import Navbar from '../Navbar';
-import Chillax from '../Chillax';
+import Home from '../Home';
 import Browse from '../Browse';
 import Library from '../Library';
 
@@ -15,8 +15,8 @@ const App = () => {
     <Router>
       <Navbar />
       <Switch>
-        <Redirect exact from='/' to='/chillax' />
-        <Route path='/chillax' component={Chillax} />
+        <Redirect from='/home' to='/' />
+        <Route exact path='/' component={Home} />
         <Route path='/browse' component={Browse} />
         <Route path='/library' component={Library} />
         <Route path='/*' component={() => <h1>Not Found</h1>} />

@@ -8,11 +8,11 @@ import { SERVER_URL } from '../../constants';
 const Navbar = ({ fetchUser, logoutUser, isAuthenticated, user }) => {
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [fetchUser]);
 
   console.log('user', user);
 
-  const routes = ['chillax', 'browse', 'library'];
+  const routes = ['home', 'browse', 'library'];
 
   const handleGoogleSignInClick = () => {
     window.open(`${SERVER_URL}/auth/google`, '_self');
