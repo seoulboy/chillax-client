@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDebounce } from '../../utils';
 const axios = require('axios');
 require('./Home.scss');
 
 const Home = props => {
-  const audioPlayer = useRef(null);
-
+  // TODO: debouncer works correctly, but the home component still gets rendered too often.
+  const [volume, setVolume] = useState('');
   const [showTodaysMusicPlayer, setShowTodaysMusicPlayer] = useState(false);
   const [todaysMusicTitle, setTodaysMusicTitle] = useState('');
-  const [isPlayingSound, setIsPlayingSound] = useState(false);
   const todaysMusicVideoId = '7ZguAEoNpZw';
 
   useEffect(() => {
@@ -27,84 +27,91 @@ const Home = props => {
     });
   }, []);
 
-  const playAudio = () => {
-    if (isPlayingSound) {
-      setIsPlayingSound(false);
-      audioPlayer.current.pause();
+  const debouncedVolume = useDebounce(volume, 300);
+
+  useEffect(() => {
+    if (debouncedVolume) {
+      props.changeVolume(debouncedVolume);
+    }
+  }, [debouncedVolume]);
+
+  const playOrPauseAudio = () => {
+    if (props.isPlayingSound) {
+      props.pauseSound();
     } else {
-      setIsPlayingSound(true);
-      audioPlayer.current.play();
+      props.playSound();
     }
   };
 
-  const setVolume = volume => {
-    audioPlayer.current.volume = volume;
-  };
-  
   return (
-    <div id='home-container'>
-      <div id='default-audioplayer-skin'>
-        <button
-          id='play-button'
-          className={isPlayingSound ? 'main-pause' : 'main-play'}
-          onClick={() => playAudio()}
-        ></button>
-        <input
-          id='range-volume'
-          type='range'
-          onInput={event => setVolume(event.target.value)}
-          onChange={event => setVolume(event.target.value)}
-          min='0'
-          max='1'
-          step='0.01'
-          defaultValue='1'
-        />
-      </div>
-      <audio
-        id='default-audioplayer'
-        src='https://rainymood.com/audio1110/0.m4a'
-        loop
-        ref={audioPlayer}
-      ></audio>
-      <h1>Chillax</h1>
-      <p>Go ahead and take a chill pill for today</p>
-      <h3 class='todays-music'>
-        {showTodaysMusicPlayer ? (
-          <span>
-            <button
-              onClick={() => {
-                setShowTodaysMusicPlayer(false);
-              }}
-            >
-              Chillax
-            </button>{' '}
-            + {todaysMusicTitle}
-          </span>
-        ) : (
-          <span>
-            Today's Music:{' '}
-            <button
-              onClick={() => {
-                setShowTodaysMusicPlayer(true);
-              }}
-            >
-              {todaysMusicTitle}
-            </button>
-          </span>
-        )}
-      </h3>
+    <div id='home-main-container'>
+      <div id='center-block'>
+        <div id='default-audioplayer-skin'>
+          <button
+            id='play-button'
+            className={props.isPlayingSound ? 'main-pause' : 'main-play'}
+            onClick={() => playOrPauseAudio()}
+          ></button>
+          <input
+            id='range-volume'
+            type='range'
+            onInput={event => setVolume(event.target.value)}
+            onChange={event => setVolume(event.target.value)}
+            min='0'
+            max='1'
+            step='0.01'
+            defaultValue='1'
+          />
+        </div>
 
-      {showTodaysMusicPlayer && (
-        <iframe
-          title='todays music'
-          src='https://www.youtube.com/embed/-2cHAFq5oKg?autoplay=1'
-          width='960'
-          height='447'
-          frameBorder='0'
-          allow='autoplay'
-          allowFullScreen
-        ></iframe>
-      )}
+        {!showTodaysMusicPlayer && (
+          <div className='home-content-container'>
+            <h1>Chillax</h1>
+            <p>HELPS YOU FOCUS, RELAX, AND SLEEP </p>
+          </div>
+        )}
+        <h3 className='todays-music'>
+          {showTodaysMusicPlayer ? (
+            <span>
+              <button
+                onClick={() => {
+                  setShowTodaysMusicPlayer(false);
+                }}
+                className='back-button-chillax'
+              >
+                Chillax
+              </button>{' '}
+              + {todaysMusicTitle}
+            </span>
+          ) : (
+            <span>
+              TODAY'S MUSIC:{' '}
+              <button
+                onClick={() => {
+                  setShowTodaysMusicPlayer(true);
+                }}
+              >
+                {todaysMusicTitle.toUpperCase()}
+              </button>
+            </span>
+          )}
+        </h3>
+        <div className='video-container'>
+          <div className='video-wrapper'>
+            {showTodaysMusicPlayer && (
+              <iframe
+                title='todays-music'
+                src={`https://www.youtube.com/embed/${todaysMusicVideoId}?autoplay=1`}
+                width='560'
+                height='349'
+                frameBorder='0'
+                allow='autoplay'
+                allowFullScreen
+              ></iframe>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
