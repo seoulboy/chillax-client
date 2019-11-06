@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDebounce } from '../../utils';
 const axios = require('axios');
 require('./Home.scss');
@@ -8,8 +8,9 @@ const Home = props => {
   const [volume, setVolume] = useState('');
   const [showTodaysMusicPlayer, setShowTodaysMusicPlayer] = useState(false);
   const [todaysMusicTitle, setTodaysMusicTitle] = useState('');
+  const debouncedVolume = useDebounce(volume, 300);
   const todaysMusicVideoId = '7ZguAEoNpZw';
-
+  
   useEffect(() => {
     const options = {
       url: 'https://www.googleapis.com/youtube/v3/videos',
@@ -26,8 +27,6 @@ const Home = props => {
       setTodaysMusicTitle(response.data.items[0].snippet.title);
     });
   }, []);
-
-  const debouncedVolume = useDebounce(volume, 300);
 
   useEffect(() => {
     if (debouncedVolume) {

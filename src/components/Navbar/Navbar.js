@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import './Navbar.scss';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { fetchUser, logoutUser } from '../../actions/userActions';
 import { SERVER_URL } from '../../constants';
 
-const Navbar = ({ fetchUser, logoutUser, isAuthenticated, user }) => {
+const Navbar = props => {
   useEffect(() => {
-    fetchUser();
-  }, [fetchUser]);
+    props.fetchUser();
+  }, [props.fetchUser]);
 
-  console.log('user', user);
+  console.log('user', props.user);
 
   const routes = ['home', 'browse', 'library'];
 
@@ -20,20 +20,37 @@ const Navbar = ({ fetchUser, logoutUser, isAuthenticated, user }) => {
 
   const handleLogoutClick = async () => {
     await window.open(`${SERVER_URL}/auth/logout`, '_self');
-    logoutUser();
+    await props.logoutUser();
+    alert('you have successfully signed out');
   };
 
   return (
     <div className='nav-container'>
       <ul>
         {routes.map(route => {
+          const path = '/' + route;
           return (
-            <li key={route}>
+            <li
+              className={
+                props.location.pathname === path
+                  ? 'nav-menu-selected'
+                  : 'nav-menu'
+              }
+              key={route}
+            >
               <Link to={route}>{route}</Link>
             </li>
           );
         })}
-        {isAuthenticated ? (
+        {props.isAuthenticated && (
+          <li
+            className='show-upload-modal-button'
+            onClick={props.displayUploadModal}
+          >
+            Upload
+          </li>
+        )}
+        {props.isAuthenticated ? (
           <li className='sign-in-out' onClick={handleLogoutClick}>
             Sign out
           </li>
@@ -57,7 +74,9 @@ const mapDispatchToProps = {
   logoutUser,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Navbar);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Navbar)
+);

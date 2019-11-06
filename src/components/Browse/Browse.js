@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const Browse = () => {
-  return <div>currently viewing browse page component</div>
-}
+
+  return <div> browse component</div>;
+};
 
 export default Browse;

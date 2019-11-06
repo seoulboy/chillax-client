@@ -8,10 +8,20 @@ $text-color: white;
     margin: 0 auto;
     list-style: none;
     position: relative;
+    .nav-menu, .nav-menu-selected {
+      margin: 0 30px;
+    }
+    .nav-menu-selected {
+      text-decoration: underline;
+    }
     li {
       margin: 0 10px;
       display: inline-block;
       color: $text-color;
+      text-transform: uppercase;
+      font-family: 'Shadows Into Light', cursive;
+      // font-weight: bolder;
+      font-size: 26px;
       a {
         color: $text-color;
       }
