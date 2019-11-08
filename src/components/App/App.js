@@ -51,6 +51,7 @@ const App = props => {
       </Switch>
       <Modal handleClose={hideUploadModal} show={showUploadModal}>
         <UploadForm
+          handleClose={hideUploadModal}
           showUploadModal={showUploadModal}
           uploadSound={props.uploadSound}
           user={props.user}

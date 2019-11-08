@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
+import html2canvas from 'html2canvas';
 import './UploadForm.scss';
 
 const UploadForm = props => {
   const [title, setTitle] = useState('');
-  const [type, setType] = useState('white-noise');
+  const [type, setType] = useState('');
   const [description, setDescription] = useState('');
   const [audioFile, setAudioFile] = useState(null);
   const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [previewSrc, setPreviewSrc] = useState('//:0');
 
   const audioInput = useRef(null);
   const thumbnailInput = useRef(null);
+  const thumbnailDiv = useRef(null);
+  const whiteNoiseRadioBtn = useRef(null);
+  const soundScapeRadioBtn = useRef(null);
 
   useEffect(() => {
     if (!props.showUploadModal) {
@@ -21,13 +26,109 @@ const UploadForm = props => {
     }
   }, [props.showUploadModal]);
 
-  const submitHandler = e => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    props.uploadSound(formData, props.user._id);
+  const blobToFile = (blob, fileName) => {
+    blob.lastModifiedDate = new Date();
+    blob.name = fileName;
+    return blob;
   };
 
-  // TODO: if white noise is checked, allow upto 4 sounds upload.
+  const submitHandler = async e => {
+    e.preventDefault();
+    console.log('submithandler called');
+    const formData = new FormData(e.target);
+    // delete original image from formdata
+    formData.delete('image');
+    if (thumbnailFile) {
+      // capture and store it in a variable
+      const thumbnailCanvas = await html2canvas(thumbnailDiv.current);
+      const thumbnailDataURL = thumbnailCanvas.toDataURL();
+
+      // convert to blob
+      fetch(thumbnailDataURL)
+        .then(response => response.blob())
+        .then(blob => {
+          // append the blob to formdata as image and upload
+          const resizedThumbnailFile = blobToFile(blob, 'thumbnail.jpg');
+          formData.append('image', resizedThumbnailFile);
+          props.uploadSound(formData, props.user._id);
+          alert('upload successful!');
+        });
+    } else {
+      formData.append('defaultImage', props.user.thumbnail);
+      props.uploadSound(formData, props.user._id);
+      alert('upload successful!');
+    }
+    clearInputFields();
+    props.handleClose();
+  };
+
+  const handleImageResizing = event => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = event => {
+      const image = document.createElement('img');
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        var context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0);
+
+        const MAX_WIDTH = 1000;
+        const MAX_HEIGHT = 1000;
+        var width = image.width;
+        var height = image.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0, width, height);
+        var dataUrl = canvas.toDataURL('image/png');
+        setPreviewSrc(dataUrl);
+      };
+      image.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const titleCase = str => {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(' ');
+  };
+
+  const parseFileName = filename => {
+    const nameWithoutExtension = filename.replace(/\.[^/.]+$/, '');
+    const spacedOutName = nameWithoutExtension
+      .split('_')
+      .join(' ')
+      .split('-')
+      .join(' ');
+    return titleCase(spacedOutName);
+  };
+
+  const clearInputFields = () => {
+    whiteNoiseRadioBtn.current.checked = false;
+    soundScapeRadioBtn.current.checked = false;
+    thumbnailInput.current.value = null;
+    audioInput.current.value = null;
+    setPreviewSrc('//:0');
+  };
+
+  // TODO:
+  // upload multiple sounds (ONLY FOUR!!!)
   // loading animation when file is being uploaded.
   return (
     <div className='form-container'>
@@ -36,69 +137,138 @@ const UploadForm = props => {
         onSubmit={e => submitHandler(e)}
         encType='multipart/form-data'
       >
-        <label htmlFor='upload-sound'>
-          <p>Drag and drop your white noise here.</p>
-          <br />
-          or choose files to upload
-          <br />
-          <input
-            id='upload-sound'
-            type='file'
-            name='sound'
-            accept='audio/*'
-            ref={audioInput}
-            onChange={e => setAudioFile(e.target.files[0])}
-          />
-        </label>
-        {
-          <label htmlFor='upload-thumbnail'>
-            Upload Thumbnail
+        <div className='sound-thumbnail-input-container'>
+          <label className='type-label'>
+            <input
+              ref={whiteNoiseRadioBtn}
+              type='radio'
+              name='type'
+              value='white-noise'
+              onChange={e => {
+                setType(e.target.value);
+                audioInput.current.value = '';
+              }}
+            />
+            <span>white noise</span>
+          </label>
+          <label className='type-label'>
+            <input
+              ref={soundScapeRadioBtn}
+              type='radio'
+              name='type'
+              value='soundscape'
+              onChange={e => {
+                setType(e.target.value);
+                audioInput.current.value = '';
+              }}
+            />
+            <span>soundscape</span>
+          </label>
+
+          <label
+            htmlFor='upload-sound'
+            className={type ? 'visible' : 'invisible'}
+          >
+            <p>
+              <p className={type === 'soundscape' ? 'invisible' : 'visible'}>
+                <br />
+                You can upload a single sound for white noise.
+                <br />
+              </p>
+              <p className={type === 'soundscape' ? 'visible' : 'invisible'}>
+                <br />
+                You can upload upto four sound for soundscape.
+                <br />
+              </p>
+
+              <input
+                id='upload-sound'
+                type='file'
+                name='sound'
+                accept='audio/*'
+                ref={audioInput}
+                onChange={e => {
+                  if (e.target.files[0]) {
+                    setAudioFile(e.target.files[0]);
+                    setTitle(parseFileName(e.target.files[0].name));
+                  }
+                }}
+                multiple={type === 'white-noise' ? false : 'multiple'}
+              />
+            </p>
+          </label>
+          <label
+            htmlFor='upload-thumbnail'
+            className={audioFile ? 'visible' : 'invisible'}
+          >
+            <div className='thumb' ref={thumbnailDiv}>
+              <img id='thumbnail-preview' src={previewSrc} alt='' />
+              <button
+                type='button'
+                className={thumbnailFile ? 'invisible' : 'visible'}
+                onClick={e => {
+                  e.preventDefault();
+                  thumbnailInput.current.click();
+                }}
+              >
+                Upload image
+              </button>
+            </div>
+            <p>
+              <button
+                id='replace-image-button'
+                type='button'
+                className={thumbnailFile ? 'visible' : 'invisible'}
+                onClick={e => {
+                  e.preventDefault();
+                  thumbnailInput.current.click();
+                }}
+              >
+                replace image
+              </button>
+              <input
+                id='upload-thumbnail'
+                type='file'
+                name='image'
+                accept='image/*'
+                ref={thumbnailInput}
+                onChange={e => {
+                  if (e.target.value) {
+                    handleImageResizing(e);
+                    setThumbnailFile(e.target.value);
+                  }
+                }}
+              />
+            </p>
+          </label>
+        </div>
+        <div className='title-description-container'>
+          <label
+            htmlFor='title-input'
+            className={audioFile ? 'visible' : 'invisible'}
+          >
+            <span className='required-field'>*</span>Title
             <br />
             <input
-              id='upload-thumbnail'
-              type='file'
-              name='image'
-              accept='image/*'
-              ref={thumbnailInput}
-              onChange={e => setThumbnailFile(e.target.files[0])}
-            />
-          </label>
-        }
-        {thumbnailFile && (
-          <label htmlFor='upload-title'>
-            <input
-              id='upload-title'
+              id='title-input'
               name='title'
               type='text'
               placeholder='enter title'
               value={title}
               onChange={e => setTitle(e.target.value)}
+              required
             />
           </label>
-        )}
-        {thumbnailFile && (
-          <label>
-            <input
-              type='radio'
-              name='type'
-              value='white-noise'
-              defaultChecked
-              onChange={e => setType(e.target.value)}
-            />
-            white noise
-            <input
-              type='radio'
-              name='type'
-              value='soundscape'
-              onChange={e => setType(e.target.value)}
-            />
-            soundscape
-          </label>
-        )}
-        {thumbnailFile && (
-          <label htmlFor='upload-description'>
-            <input
-              type='text'
+          <label
+            htmlFor='description-input'
+            className={audioFile ? 'visible' : 'invisible'}
+          >
+            <span className='required-field'>*</span>Description
+            <br />
+            <textarea
+              cols='40'
+              rows='5'
+              id='description-input'
               name='description'
               placeholder='describe your sound here'
               onChange={e => setDescription(e.target.value)}
@@ -106,9 +276,25 @@ const UploadForm = props => {
               required
             />
           </label>
-        )}
-
-        {thumbnailFile && <input type='submit' value='Upload' />}
+        </div>
+        <div className='decision-buttons-container'>
+          <div className={audioFile ? 'visible' : 'invisible'}>
+            <span className='required-field'>*</span>Required Fields
+            <div className='save-cancel-button-container'>
+              <button
+                id='cancel-button'
+                type='button'
+                onClick={() => {
+                  clearInputFields();
+                  props.handleClose();
+                }}
+              >
+                Cancel
+              </button>
+              <input id='save-button' type='submit' value='Save' />
+            </div>
+          </div>
+        </div>
       </form>
     </div>
   );
