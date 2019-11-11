@@ -43,7 +43,6 @@ export const getLikedSounds = userId => {
     return fetch(url, options)
       .then(handleErrors)
       .then(json => {
-        console.log(json);
         dispatch(fetchLikedSoundsSuccess(json.likedSounds));
         return json.likedSounds;
       })

@@ -6,12 +6,12 @@ import { getLikedSounds } from '../../actions/likedSoundActions';
 import { getListeningHistory } from '../../actions/listeningHistoryActions';
 
 import LikesAndListenHistory from '../LikesAndListenHistory';
-import { updateListeningHistory } from '../../api';
+import { updateListeningHistory, handleLike, handleUnlike } from '../../api';
 import { Icon } from 'antd';
 import { titleCase } from '../../utils';
 
 const Browse = props => {
-  console.log(props);
+  const [likedSoundIds, setLikedSoundIds] = useState([]);
   const [soundPlayedJustBefore, setSoundPlayedJustBefore] = useState('');
   const mostPopularSoundsContainer = useRef(null);
   const recentlyUploadedSoundsContainer = useRef(null);
@@ -99,6 +99,28 @@ const Browse = props => {
                     src={sound.url[0].thumbnailUrl}
                     alt={sound.title}
                   />
+                  <Icon
+                    className='like-button'
+                    type='heart'
+                    onClick={e => {
+                      if (!likedSoundIds.includes(sound._id)) {
+                        handleLike(sound._id, props.user._id);
+                        setLikedSoundIds(likedSoundIds.concat(sound._id));
+                      } else if (likedSoundIds.includes(sound._id)) {
+                        handleUnlike(sound._id, props.user._id);
+                        setLikedSoundIds(
+                          likedSoundIds.filter(id => id != sound._id)
+                        );
+                      }
+                    }}
+                    theme={(() => {
+                      if (likedSoundIds.includes(sound._id)) {
+                        return 'filled';
+                      } else {
+                        return 'outlined';
+                      }
+                    })()}
+                  />
                   <button
                     className={
                       isPlayingThisSound(sound.url[0].soundUrl) &&
@@ -108,8 +130,10 @@ const Browse = props => {
                     }
                     onClick={() => {
                       playOrPauseAudio(sound.url[0].soundUrl);
-                      updateListeningHistory(sound._id, props.user._id);
-                      props.setCurrentlyPlaying(sound.url[0].soundUrl);
+                      if (props.currentlyPaying !== sound.url[0].soundUrl) {
+                        updateListeningHistory(sound._id, props.user._id);
+                        props.setCurrentlyPlaying(sound.url[0].soundUrl);
+                      }
                     }}
                   ></button>
                 </div>
@@ -128,6 +152,12 @@ const Browse = props => {
       props.getSoundsBrowsePage(props.user._id);
     }
   }, [props.user]);
+
+  useEffect(() => {
+    if (props.user.likedSounds) {
+      setLikedSoundIds(props.user.likedSounds);
+    }
+  }, [props.likedSounds]);
 
   return (
     <div className='browse-page-container'>

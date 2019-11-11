@@ -3,7 +3,6 @@ import './LikesAndListenHistory.scss';
 import { Icon } from 'antd';
 
 const LikesAndListenHistory = props => {
-  console.log(props);
   useEffect(() => {
     props.getLikedSounds();
     props.getListeningHistory();
@@ -18,8 +17,9 @@ const LikesAndListenHistory = props => {
             <p className='likes-uploader'>{sound.uploader.name}</p>
             <p className='likes-title'>{sound.title}</p>
             <p>
-              played# {sound.times_played} liked# {sound.likedBy.length}{' '}
-              comments# {sound.commentedBy.length}
+              <Icon type='caret-right' /> {sound.times_played}{' '}
+              <Icon type='heart' theme='filled' /> {sound.likedBy.length}{' '}
+              <Icon type='message' theme='filled' /> {sound.commentedBy.length}
             </p>
           </div>
         </div>
@@ -37,8 +37,9 @@ const LikesAndListenHistory = props => {
             <p className='history-uploader'>{sound.uploader.name}</p>
             <p className='history-title'>{sound.title}</p>
             <p>
-              played# {sound.times_played} liked# {sound.likedBy.length}{' '}
-              comments# {sound.commentedBy.length}
+              <Icon type='caret-right' /> {sound.times_played}{' '}
+              <Icon type='heart' theme='filled' /> {sound.likedBy.length}{' '}
+              <Icon type='message' theme='filled' /> {sound.commentedBy.length}
             </p>
           </div>
         </div>
@@ -53,6 +54,7 @@ const LikesAndListenHistory = props => {
         <div className='card-header'>
           <Icon type='heart' theme='filled' />{' '}
           {props.user.likedSounds ? props.user.likedSounds.length : 0} likes
+          <span>View all</span>
         </div>
         <div className='likes-card-container'>{renderLikesCard()}</div>
       </div>
@@ -61,6 +63,7 @@ const LikesAndListenHistory = props => {
         <div className='listening-history-container'>
           <div className='card-header'>
             <Icon type='calendar' /> Listening History
+            <span>View all</span>
           </div>
           <div className='history-card-container'>
             {renderListeningHistoryCard()}
