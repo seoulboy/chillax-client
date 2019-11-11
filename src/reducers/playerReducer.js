@@ -3,7 +3,6 @@ import {
   PAUSE_SOUND,
   CHANGE_VOLUME,
   SET_CURRENTLY_PLAYING,
-  UPLOAD_SOUND_SUCCESS,
 } from '../actions/soundActions';
 
 const initalState = {
@@ -12,7 +11,7 @@ const initalState = {
   currentlyPlaying: null,
 };
 
-const soundReducer = (state = initalState, action) => {
+const playerReducer = (state = initalState, action) => {
   switch (action.type) {
     case PLAY_SOUND:
       return {
@@ -34,14 +33,9 @@ const soundReducer = (state = initalState, action) => {
         ...state,
         currentlyPlaying: action.payload.url,
       };
-    case UPLOAD_SOUND_SUCCESS:
-      console.log('upload sound success reducer activated');
-      return {
-        ...state,
-      };
     default:
       return state;
   }
 };
 
-export default soundReducer;
+export default playerReducer;

@@ -8,9 +8,7 @@ import { SERVER_URL } from '../../constants';
 const Navbar = props => {
   useEffect(() => {
     props.fetchUser();
-  }, [props.fetchUser]);
-
-  console.log('user', props.user);
+  }, []);
 
   const routes = ['home', 'browse', 'library'];
 

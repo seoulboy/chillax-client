@@ -18,6 +18,7 @@ import {
   pauseSound,
   changeVolume,
   uploadSound,
+  setCurrentlyPlaying,
 } from '../../actions/soundActions';
 
 const App = props => {
@@ -42,10 +43,24 @@ const App = props => {
               playSound={props.playSound}
               pauseSound={props.pauseSound}
               changeVolume={props.changeVolume}
+              setCurrentlyPlaying={props.setCurrentlyPlaying}
             />
           )}
         />
-        <Route path='/browse' component={Browse} />
+        <Route
+          path='/browse'
+          render={() => (
+            <Browse
+              user={props.user}
+              isPlayingSound={props.isPlayingSound}
+              playSound={props.playSound}
+              pauseSound={props.pauseSound}
+              changeVolume={props.changeVolume}
+              setCurrentlyPlaying={props.setCurrentlyPlaying}
+              currentlyPlaying={props.currentlyPlaying}
+            />
+          )}
+        />
         <Route path='/library' component={Library} />
         <Route path='/*' component={() => <h1>Not Found</h1>} />
       </Switch>
@@ -66,9 +81,9 @@ const App = props => {
   );
 };
 const mapStateToProps = state => ({
-  isPlayingSound: state.soundReducer.isPlayingSound,
-  volume: state.soundReducer.volume,
-  currentlyPlaying: state.soundReducer.currentlyPlaying,
+  isPlayingSound: state.playerReducer.isPlayingSound,
+  volume: state.playerReducer.volume,
+  currentlyPlaying: state.playerReducer.currentlyPlaying,
   user: state.userReducer.user,
 });
 
@@ -77,6 +92,7 @@ const mapDispatchToProps = {
   pauseSound,
   changeVolume,
   uploadSound,
+  setCurrentlyPlaying,
 };
 
 export default connect(

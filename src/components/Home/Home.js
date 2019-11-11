@@ -47,9 +47,11 @@ const Home = props => {
       <div id='center-block'>
         <div id='default-audioplayer-skin'>
           <button
-            id='play-button'
+            id='main-play-button'
             className={props.isPlayingSound ? 'main-pause' : 'main-play'}
-            onClick={() => playOrPauseAudio()}
+            onClick={() => {
+              props.setCurrentlyPlaying('https://rainymood.com/audio1110/0.m4a');
+              playOrPauseAudio()}}
           ></button>
           <input
             id='range-volume'

@@ -9,7 +9,7 @@ const AudioPlayer = props => {
     } else {
       audioElement.current.pause();
     }
-  }, [props.isPlayingSound]);
+  });
 
   useEffect(() => {
     audioElement.current.volume = props.volume;
@@ -19,7 +19,7 @@ const AudioPlayer = props => {
     <div>
       <audio
         id='default-audioplayer'
-        src='https://rainymood.com/audio1110/0.m4a'
+        src={props.currentlyPlaying}
         preload='auto'
         loop
         ref={audioElement}

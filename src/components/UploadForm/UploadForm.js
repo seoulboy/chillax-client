@@ -169,7 +169,7 @@ const UploadForm = props => {
             htmlFor='upload-sound'
             className={type ? 'visible' : 'invisible'}
           >
-            <p>
+            <div>
               <p className={type === 'soundscape' ? 'invisible' : 'visible'}>
                 <br />
                 You can upload a single sound for white noise.
@@ -195,7 +195,7 @@ const UploadForm = props => {
                 }}
                 multiple={type === 'white-noise' ? false : 'multiple'}
               />
-            </p>
+            </div>
           </label>
           <label
             htmlFor='upload-thumbnail'
