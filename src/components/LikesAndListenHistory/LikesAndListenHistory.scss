@@ -1,0 +1,40 @@
+#likes-and-listen-history-container {
+  height: 100%;
+  width: 300px;
+  display: inline-block;
+  border: 1px solid white;
+  float: right;
+  .likes-card-container,
+  .history-card-container {
+    .each-card {
+      display: flex;
+      margin: 20px 20px;
+      img {
+        width: 54px;
+        height: 54px;
+      }
+    }
+  }
+
+  .card-header {
+    width: 86%;
+    border-bottom: 1px solid white;
+    margin: 20px auto;
+    padding-bottom: 5px;
+  }
+
+  .card-info {
+    display: inline-block;
+    p {
+      margin: 0;
+    }
+    .likes-title,
+    .history-title {
+      overflow: hidden;
+      height: 1.2rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+    }
+  }
+}
