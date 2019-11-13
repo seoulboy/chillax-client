@@ -1,0 +1,94 @@
+$soundinfo-img-width-and-height: 250px;
+$play-button-width-height: 70px;
+
+.soundinfo-container {
+  background-image: linear-gradient(to bottom right, #846270, #70919c);
+  color: white;
+  border-radius: 30px;
+  padding: 30px 40px;
+  display: flex;
+  .soundinfo-image-container {
+    display: inline-block;
+    img {
+      width: $soundinfo-img-width-and-height;
+      height: $soundinfo-img-width-and-height;
+      margin-left: 32px;
+    }
+  }
+  .soundinfo-data-container {
+    display: inline-block;
+    width: 64%;
+    p {
+      margin: 0;
+    }
+    .soundinfo-header {
+      display: flex;
+      .play-button {
+        height: $play-button-width-height;
+        width: $play-button-width-height;
+        display: inline-block;
+        border: none;
+        outline: none;
+        margin-right: 14px;
+      }
+
+      &:hover .play-button {
+        display: inline-block;
+      }
+
+      .play {
+        background: url('https://rainymood.com/i/play4.png');
+        background-size: $play-button-width-height $play-button-width-height;
+      }
+
+      .pause {
+        background: url('https://rainymood.com/i/pause4.png');
+        background-size: $play-button-width-height $play-button-width-height;
+      }
+      div {
+        display: inline-block;
+        width: 84%;
+        margin-top: 5px;
+        
+      }
+    }
+
+    .soundinfo-uploader,
+    .soundinfo-title {
+      background: black;
+      color: white;
+      width: fit-content;
+      padding: 2px 8px;
+      margin-bottom: 10px;
+    }
+    .soundinfo-upload-date {
+      float: right;
+    }
+    .soundinfo-uploader {
+      color: grey;
+      margin-bottom: 6px;
+    }
+    .soundinfo-type {
+      color: white;
+      background: rgb(153, 153, 153);
+      border-radius: 10px;
+      width: fit-content;
+      padding: 2px 5px;
+      float: right;
+    }
+    .soundinfo-title {
+      width: fit-content;
+      max-width: 210px;
+      font-size: 1vw;
+    }
+    .soundinfo-times-played,
+    .soundinfo-likes {
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .soundinfo-description {
+      margin-top: 10px;
+      padding-top: 15px;
+    }
+  }
+}
