@@ -5,10 +5,10 @@ import { Link, withRouter } from 'react-router-dom';
 import { fetchUser, logoutUser } from '../../actions/userActions';
 import { SERVER_URL } from '../../constants';
 
-const Navbar = props => {
+const Navbar = ({fetchUser, logoutUser, isAuthenticated, displayUploadModal, location}) => {
   useEffect(() => {
-    props.fetchUser();
-  }, []);
+    fetchUser();
+  }, [fetchUser]);
 
   const routes = ['home', 'browse', 'library'];
 
@@ -18,7 +18,7 @@ const Navbar = props => {
 
   const handleLogoutClick = async () => {
     await window.open(`${SERVER_URL}/auth/logout`, '_self');
-    await props.logoutUser();
+    await logoutUser();
     alert('you have successfully signed out');
   };
 
@@ -30,7 +30,7 @@ const Navbar = props => {
           return (
             <li
               className={
-                props.location.pathname === path
+                location.pathname === path
                   ? 'nav-menu-selected'
                   : 'nav-menu'
               }
@@ -40,15 +40,15 @@ const Navbar = props => {
             </li>
           );
         })}
-        {props.isAuthenticated && (
+        {isAuthenticated && (
           <li
             className='show-upload-modal-button'
-            onClick={props.displayUploadModal}
+            onClick={displayUploadModal}
           >
             Upload
           </li>
         )}
-        {props.isAuthenticated ? (
+        {isAuthenticated ? (
           <li className='sign-in-out' onClick={handleLogoutClick}>
             Sign out
           </li>

@@ -1,18 +1,50 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LikesAndListenHistory.scss';
+import Modal from '../Modal';
+import ViewAll from '../ViewAll';
 import { Icon } from 'antd';
+import { OmitProps } from 'antd/lib/transfer/renderListBody';
 
-const LikesAndListenHistory = props => {
+const LikesAndListenHistory = ({
+  getLikedSounds,
+  getListeningHistory,
+  likedSounds,
+  listeningHistory,
+  user,
+  isPlayingThisSound,
+  isPlayingSound,
+  playOrPauseAudio,
+  currentlyPlaying,
+  updateListeningHistory,
+  setCurrentlyPlaying,
+}) => {
+  const [showLikedOrHistoryModal, setShowLikedOrHistoryModal] = useState(false);
+  const [viewingAll, setViewingAll] = useState('');
+
   useEffect(() => {
-    props.getLikedSounds();
-    props.getListeningHistory();
-  }, []);
+    getLikedSounds();
+    getListeningHistory();
+  }, [user.likedSounds]);
 
   const renderLikesCard = () => {
-    const likedSoundsCard = props.likedSounds.map(sound => {
+    const likedSoundsCard = likedSounds.map(sound => {
       return (
         <div className='each-card' key={sound._id}>
           <img src={sound.url[0].thumbnailUrl} alt={sound.title} />
+          <button
+            className={
+              isPlayingThisSound(sound.url[0].soundUrl) && isPlayingSound
+                ? 'play-button pause'
+                : 'play-button play'
+            }
+            onClick={() => {
+              playOrPauseAudio(sound.url[0].soundUrl);
+              if (currentlyPlaying !== sound.url[0].soundUrl) {
+                updateListeningHistory(sound._id, user._id);
+                setCurrentlyPlaying(sound.url[0].soundUrl);
+              }
+            }}
+          ></button>
           <div className='card-info'>
             <p className='likes-uploader'>{sound.uploader.name}</p>
             <p className='likes-title'>{sound.title}</p>
@@ -29,10 +61,24 @@ const LikesAndListenHistory = props => {
   };
 
   const renderListeningHistoryCard = () => {
-    const listeningHistoryCards = props.listeningHistory.map(sound => {
+    const listeningHistoryCards = listeningHistory.map(sound => {
       return (
         <div className='each-card' key={sound._id}>
           <img src={sound.url[0].thumbnailUrl} alt={sound.title} />
+          <button
+            className={
+              isPlayingThisSound(sound.url[0].soundUrl) && isPlayingSound
+                ? 'play-button pause'
+                : 'play-button play'
+            }
+            onClick={() => {
+              playOrPauseAudio(sound.url[0].soundUrl);
+              if (currentlyPlaying !== sound.url[0].soundUrl) {
+                updateListeningHistory(sound._id, user._id);
+                setCurrentlyPlaying(sound.url[0].soundUrl);
+              }
+            }}
+          ></button>
           <div className='card-info'>
             <p className='history-uploader'>{sound.uploader.name}</p>
             <p className='history-title'>{sound.title}</p>
@@ -53,8 +99,15 @@ const LikesAndListenHistory = props => {
       <div className='likes-container'>
         <div className='card-header'>
           <Icon type='heart' theme='filled' />{' '}
-          {props.user.likedSounds ? props.user.likedSounds.length : 0} likes
-          <span>View all</span>
+          {user.likedSounds ? user.likedSounds.length : 0} likes
+          <span
+            onClick={() => {
+              setShowLikedOrHistoryModal(true);
+              setViewingAll('like');
+            }}
+          >
+            View all
+          </span>
         </div>
         <div className='likes-card-container'>{renderLikesCard()}</div>
       </div>
@@ -63,13 +116,39 @@ const LikesAndListenHistory = props => {
         <div className='listening-history-container'>
           <div className='card-header'>
             <Icon type='calendar' /> Listening History
-            <span>View all</span>
+            <span
+              onClick={() => {
+                setShowLikedOrHistoryModal(true);
+                setViewingAll('history');
+              }}
+            >
+              View all
+            </span>
           </div>
           <div className='history-card-container'>
             {renderListeningHistoryCard()}
           </div>
         </div>
       </div>
+      {showLikedOrHistoryModal && (
+        <Modal
+          handleClose={() => setShowLikedOrHistoryModal(false)}
+          show={showLikedOrHistoryModal}
+        >
+          {
+            <ViewAll
+              user={user}
+              viewingAll={viewingAll}
+              isPlayingThisSound={isPlayingThisSound}
+              isPlayingSound={isPlayingSound}
+              playOrPauseAudio={playOrPauseAudio}
+              currentlyPlaying={currentlyPlaying}
+              updateListeningHistory={updateListeningHistory}
+              setCurrentlyPlaying={setCurrentlyPlaying}
+            />
+          }
+        </Modal>
+      )}
     </div>
   );
 };

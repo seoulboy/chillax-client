@@ -5,7 +5,11 @@ import {
   UPLOAD_SOUND_SUCCESS,
 } from '../actions/soundActions';
 
-import { FETCH_LIKED_SOUNDS_SUCCESS } from '../actions/likedSoundActions';
+import {
+  FETCH_LIKED_SOUNDS_SUCCESS,
+  // UNLIKE_SOUND,
+  // LIKE_SOUND,
+} from '../actions/likedSoundActions';
 
 import { FETCH_LISTENING_HISTORY_SUCCESS } from '../actions/listeningHistoryActions';
 
@@ -15,8 +19,9 @@ const initialState = {
   liked_sounds: [],
   history: [],
   recent_upload: [],
-  recommendation: [],
   most_popular: [],
+  most_listened: [],
+  discover_sounds: [],
 };
 
 const soundsReducer = (state = initialState, action) => {
@@ -33,7 +38,8 @@ const soundsReducer = (state = initialState, action) => {
         loading: false,
         recent_upload: action.payload.recent_upload,
         most_popular: action.payload.most_popular,
-        recommendation: action.payload.recommendation,
+        most_listened: action.payload.most_listened,
+        discover_sounds: action.payload.discover_sounds,
       };
     }
     case FETCH_SOUNDS_BROWSE_FAILURE: {

@@ -5,6 +5,8 @@ import {
   LOGOUT_USER,
 } from '../actions/userActions';
 
+import { LIKE_SOUND, UNLIKE_SOUND } from '../actions/likedSoundActions';
+
 const initalState = {
   user: {},
   loading: false,
@@ -42,6 +44,24 @@ const userReducer = (state = initalState, action) => {
         error: null,
         authenticated: false,
       };
+    case LIKE_SOUND: {
+      const updatedLikedSoundIds = state.user.likedSounds.concat(
+        action.payload.sound._id
+      );
+      return {
+        ...state,
+        user: { ...state.user, likedSounds: updatedLikedSoundIds },
+      };
+    }
+    case UNLIKE_SOUND: {
+      const filteredLikedSoundIds = state.user.likedSounds.filter(
+        soundId => soundId !== action.payload.sound._id
+      );
+      return {
+        ...state,
+        user: { ...state.user, likedSounds: filteredLikedSoundIds },
+      };
+    }
     default:
       return state;
   }

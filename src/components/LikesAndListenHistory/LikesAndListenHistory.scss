@@ -1,3 +1,5 @@
+$play-button-width-height: 40px;
+
 #likes-and-listen-history-container {
   height: 100%;
   width: 300px;
@@ -9,9 +11,34 @@
     .each-card {
       display: flex;
       margin: 20px 20px;
+      position: relative;
       img {
         width: 54px;
         height: 54px;
+      }
+      .play-button {
+        height: $play-button-width-height;
+        width: $play-button-width-height;
+        border: none;
+        outline: none;
+        display: none;
+        position: absolute;
+        top: 12%;
+        left: 2.5%;
+      }
+
+      &:hover .play-button {
+        display: block;
+      }
+
+      .play {
+        background: url('https://rainymood.com/i/play4.png');
+        background-size: $play-button-width-height $play-button-width-height;
+      }
+
+      .pause {
+        background: url('https://rainymood.com/i/pause4.png');
+        background-size: $play-button-width-height $play-button-width-height;
       }
     }
   }
@@ -21,12 +48,10 @@
     border-bottom: 1px solid white;
     margin: 20px auto;
     padding-bottom: 5px;
-
     span {
       float: right;
     }
   }
-
   .card-info {
     display: inline-block;
     margin-left: 10px;
@@ -42,7 +67,8 @@
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
     }
-    .likes-uploader, .history-uploader {
+    .likes-uploader,
+    .history-uploader {
       font-size: 12px;
     }
   }

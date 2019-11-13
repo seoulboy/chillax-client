@@ -1,5 +1,5 @@
 import { SERVER_URL } from '../constants';
-import { fetchLikedSoundsSuccess } from './likedSoundActions';
+// import { fetchLikedSoundsSuccess } from './likedSoundActions';
 
 export const FETCH_LISTENING_HISTORY_SUCCESS =
   'FETCH_LISTENING_HISTORY_SUCCESS';

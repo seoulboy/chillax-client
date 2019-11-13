@@ -51,10 +51,10 @@ export const getSoundsBrowsePage = (userId, type = '') => {
   const params = {
     type: type,
     recent_upload: 'true',
-    liked: 'true',
-    history: 'true',
     most_popular: 'true',
-    recommendation: 'true',
+    most_listened: 'true',
+    discover_sounds: 'true',
+
   };
 
   url.search = new URLSearchParams(params).toString();
@@ -67,11 +67,12 @@ export const getSoundsBrowsePage = (userId, type = '') => {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Credentials': 'true',
       },
     })
       .then(handleErrors)
       .then(res => {
+        console.log('getSoundsBrowsePage', res);
         dispatch(getSoundsBrowseSuccess(res));
         return res;
       })

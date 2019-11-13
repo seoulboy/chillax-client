@@ -23,16 +23,10 @@ import {
 
 const App = props => {
   const [showUploadModal, setShowUploadModal] = useState(false);
-  const displayUploadModal = () => {
-    setShowUploadModal(true);
-  };
-  const hideUploadModal = () => {
-    setShowUploadModal(false);
-  };
 
   return (
     <Router>
-      <Navbar displayUploadModal={displayUploadModal} />
+      <Navbar displayUploadModal={() => setShowUploadModal(true)} />
       <Switch>
         <Redirect exact from='/' to='/home' />
         <Route
@@ -64,14 +58,19 @@ const App = props => {
         <Route path='/library' component={Library} />
         <Route path='/*' component={() => <h1>Not Found</h1>} />
       </Switch>
-      <Modal handleClose={hideUploadModal} show={showUploadModal}>
-        <UploadForm
-          handleClose={hideUploadModal}
-          showUploadModal={showUploadModal}
-          uploadSound={props.uploadSound}
-          user={props.user}
-        />
-      </Modal>
+      {showUploadModal && (
+        <Modal
+          handleClose={() => setShowUploadModal(false)}
+          show={showUploadModal}
+        >
+          <UploadForm
+            handleClose={() => setShowUploadModal(false)}
+            showUploadModal={() => setShowUploadModal(true)}
+            uploadSound={props.uploadSound}
+            user={props.user}
+          />
+        </Modal>
+      )}
       <AudioPlayer
         isPlayingSound={props.isPlayingSound}
         volume={props.volume}

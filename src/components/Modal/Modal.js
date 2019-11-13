@@ -2,20 +2,20 @@ import React, { useRef, useEffect } from 'react';
 import './Modal.scss';
 
 const Modal = props => {
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClick);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-    };
-  }, []);
-
   const handleClick = e => {
     if (modalMain.current.contains(e.target)) {
       return;
     }
     props.handleClose();
   };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClick);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [handleClick]);
 
   const modalMain = useRef(null);
 

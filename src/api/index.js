@@ -23,33 +23,34 @@ export const updateListeningHistory = (soundId, userId) => {
     });
 };
 
-export const handleLike = (soundId, userId) => {
-  const url = `${SERVER_URL}/users/${userId}/liked_sounds`;
+export const getAllHistory = userId => {
+  const url = `${SERVER_URL}/users/${userId}/listening_history`;
   const options = {
-    method: 'PUT',
-    body: JSON.stringify({ soundId }),
+    method: 'GET',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
   };
-  fetch(url, options)
+
+  return fetch(url, options)
     .then(handleErrors)
     .then(data => {
-      console.log(data);
+      console.log('getAllHistory: ', data);
       return data;
     });
 };
 
-export const handleUnlike = (soundId, userId) => {
-  const url = `${SERVER_URL}/users/${userId}/liked_sounds/${soundId}`;
+export const getAllLiked = userId => {
+  const url = `${SERVER_URL}/users/${userId}/liked_sounds`;
   const options = {
-    method: 'DELETE',
+    method: 'GET',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
   };
-  fetch(url, options)
+
+  return fetch(url, options)
     .then(handleErrors)
     .then(data => {
-      console.log(data);
+      console.log('getAllLiked: ', data);
       return data;
     });
 };

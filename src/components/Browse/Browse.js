@@ -2,20 +2,38 @@ import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import './Browse.scss';
 import { getSoundsBrowsePage } from '../../actions/soundActions';
-import { getLikedSounds } from '../../actions/likedSoundActions';
+import {
+  getLikedSounds,
+  handleUnlike,
+  handleLike,
+} from '../../actions/likedSoundActions';
 import { getListeningHistory } from '../../actions/listeningHistoryActions';
 
 import LikesAndListenHistory from '../LikesAndListenHistory';
-import { updateListeningHistory, handleLike, handleUnlike } from '../../api';
+import Modal from '../Modal';
+import SoundInfo from '../SoundInfo';
+import { updateListeningHistory } from '../../api';
 import { Icon } from 'antd';
 import { titleCase } from '../../utils';
 
 const Browse = props => {
-  const [likedSoundIds, setLikedSoundIds] = useState([]);
   const [soundPlayedJustBefore, setSoundPlayedJustBefore] = useState('');
+  const [showSoundModal, setShowSoundModal] = useState(false);
+  const [currentlyViewingSound, setCurrentlyViewingSound] = useState(null);
+
   const mostPopularSoundsContainer = useRef(null);
   const recentlyUploadedSoundsContainer = useRef(null);
+  const discoverSoundsContainer = useRef(null);
+  const mostListenedSoundsContainer = useRef(null);
+
   const headerNavList = ['All', 'Sounds', 'Soundscapes'];
+  const likedSoundIds = props.user.likedSounds;
+
+  useEffect(() => {
+    if (props.user._id) {
+      props.getSoundsBrowsePage(props.user._id);
+    }
+  }, [props.user]);
 
   const renderHeaderButtons = headerNavList.map(item => {
     return <li key={item}>{item}</li>;
@@ -42,14 +60,22 @@ const Browse = props => {
     if (direction === 'right') {
       if (listName === 'most-popular') {
         mostPopularSoundsContainer.current.scrollLeft += 170;
-      } else {
+      } else if (listName === 'recent-uploads') {
         recentlyUploadedSoundsContainer.current.scrollLeft += 170;
+      } else if (listName === 'most-listened') {
+        mostListenedSoundsContainer.current.scrollLeft += 170;
+      } else if (listName === 'discover-sounds') {
+        discoverSoundsContainer.current.scrollLeft += 170;
       }
     } else {
       if (listName === 'most-popular') {
         mostPopularSoundsContainer.current.scrollLeft -= 170;
-      } else {
+      } else if (listName === 'recent-uploads') {
         recentlyUploadedSoundsContainer.current.scrollLeft -= 170;
+      } else if (listName === 'most-listened') {
+        mostListenedSoundsContainer.current.scrollLeft -= 170;
+      } else if (listName === 'discover-sounds') {
+        discoverSoundsContainer.current.scrollLeft -= 170;
       }
     }
   };
@@ -80,14 +106,19 @@ const Browse = props => {
   const renderMainLists = (soundList, listName) => {
     return (
       <div id={listName}>
-        {renderPrevAndNextButtons(listName)}
         <p className='list-name-heading'>{titleCase(listName)}</p>
         <div
           className={`browse-sound-container`}
           ref={
             listName === 'most-popular'
               ? mostPopularSoundsContainer
-              : recentlyUploadedSoundsContainer
+              : listName === 'recent-uploads'
+              ? recentlyUploadedSoundsContainer
+              : listName === 'most-listened'
+              ? mostListenedSoundsContainer
+              : listName === 'discover-sounds'
+              ? discoverSoundsContainer
+              : null
           }
         >
           {soundList.map(sound => {
@@ -104,13 +135,9 @@ const Browse = props => {
                     type='heart'
                     onClick={e => {
                       if (!likedSoundIds.includes(sound._id)) {
-                        handleLike(sound._id, props.user._id);
-                        setLikedSoundIds(likedSoundIds.concat(sound._id));
+                        props.handleLike(sound, props.user._id);
                       } else if (likedSoundIds.includes(sound._id)) {
-                        handleUnlike(sound._id, props.user._id);
-                        setLikedSoundIds(
-                          likedSoundIds.filter(id => id != sound._id)
-                        );
+                        props.handleUnlike(sound, props.user._id);
                       }
                     }}
                     theme={(() => {
@@ -130,14 +157,23 @@ const Browse = props => {
                     }
                     onClick={() => {
                       playOrPauseAudio(sound.url[0].soundUrl);
-                      if (props.currentlyPaying !== sound.url[0].soundUrl) {
+                      if (props.currentlyPlaying !== sound.url[0].soundUrl) {
                         updateListeningHistory(sound._id, props.user._id);
                         props.setCurrentlyPlaying(sound.url[0].soundUrl);
                       }
                     }}
                   ></button>
                 </div>
-                <p className='sound-title'>{sound.title}</p>
+                {renderPrevAndNextButtons(listName)}
+                <p
+                  className='sound-title'
+                  onClick={() => {
+                    setCurrentlyViewingSound(sound);
+                    setShowSoundModal(true);
+                  }}
+                >
+                  {sound.title}
+                </p>
                 <p className='sound-uploader'>{sound.uploader.name}</p>
               </div>
             );
@@ -147,27 +183,16 @@ const Browse = props => {
     );
   };
 
-  useEffect(() => {
-    if (props.user._id) {
-      props.getSoundsBrowsePage(props.user._id);
-    }
-  }, [props.user]);
-
-  useEffect(() => {
-    if (props.user.likedSounds) {
-      setLikedSoundIds(props.user.likedSounds);
-    }
-  }, [props.likedSounds]);
-
   return (
     <div className='browse-page-container'>
       <div className='browse-page-header'>
         <ul>{renderHeaderButtons}</ul>
       </div>
-
       <div id='list-container'>
+        {renderMainLists(props.discoverSounds, 'discover-sounds')}
         {renderMainLists(props.mostPopular, 'most-popular')}
         {renderMainLists(props.recentUpload, 'recent-uploads')}
+        {renderMainLists(props.mostListened, 'most-listened')}
       </div>
       <LikesAndListenHistory
         user={props.user}
@@ -175,7 +200,30 @@ const Browse = props => {
         listeningHistory={props.listeningHistory}
         getLikedSounds={() => props.getLikedSounds(props.user._id)}
         getListeningHistory={() => props.getListeningHistory(props.user._id)}
+        isPlayingThisSound={isPlayingThisSound}
+        isPlayingSound={props.isPlayingSound}
+        playOrPauseAudio={playOrPauseAudio}
+        currentlyPlaying={props.currentlyPlaying}
+        updateListeningHistory={updateListeningHistory}
+        setCurrentlyPlaying={props.setCurrentlyPlaying}
       />
+      {showSoundModal && (
+        <Modal
+          handleClose={() => setShowSoundModal(false)}
+          show={showSoundModal}
+        >
+          <SoundInfo
+            currentlyViewingSound={currentlyViewingSound}
+            isPlayingThisSound={isPlayingThisSound}
+            isPlayingSound={props.isPlayingSound}
+            playOrPauseAudio={playOrPauseAudio}
+            currentlyPlaying={props.currentlyPlaying}
+            updateListeningHistory={updateListeningHistory}
+            setCurrentlyPlaying={props.setCurrentlyPlaying}
+            user={props.user}
+          />
+        </Modal>
+      )}
     </div>
   );
 };
@@ -187,7 +235,8 @@ const mapStateToProps = state => {
     history,
     recent_upload,
     most_popular,
-    recommendation,
+    discover_sounds,
+    most_listened,
   } = state.soundsReducer;
   return {
     isLoading: loading,
@@ -195,7 +244,8 @@ const mapStateToProps = state => {
     listeningHistory: history,
     recentUpload: recent_upload,
     mostPopular: most_popular,
-    recommendation: recommendation,
+    discoverSounds: discover_sounds,
+    mostListened: most_listened,
   };
 };
 
@@ -203,6 +253,8 @@ const mapDispatchToProps = {
   getSoundsBrowsePage,
   getLikedSounds,
   getListeningHistory,
+  handleLike,
+  handleUnlike,
 };
 
 export default connect(

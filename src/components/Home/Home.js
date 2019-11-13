@@ -3,7 +3,7 @@ import { useDebounce } from '../../utils';
 const axios = require('axios');
 require('./Home.scss');
 
-const Home = props => {
+const Home = ({changeVolume, pauseSound, playSound, isPlayingSound, setCurrentlyPlaying}) => {
   // TODO: debouncer works correctly, but the home component still gets rendered too often.
   const [volume, setVolume] = useState('');
   const [showTodaysMusicPlayer, setShowTodaysMusicPlayer] = useState(false);
@@ -30,15 +30,15 @@ const Home = props => {
 
   useEffect(() => {
     if (debouncedVolume) {
-      props.changeVolume(debouncedVolume);
+      changeVolume(debouncedVolume);
     }
-  }, [debouncedVolume]);
+  }, [changeVolume, debouncedVolume]);
 
   const playOrPauseAudio = () => {
-    if (props.isPlayingSound) {
-      props.pauseSound();
+    if (isPlayingSound) {
+      pauseSound();
     } else {
-      props.playSound();
+      playSound();
     }
   };
 
@@ -48,9 +48,9 @@ const Home = props => {
         <div id='default-audioplayer-skin'>
           <button
             id='main-play-button'
-            className={props.isPlayingSound ? 'main-pause' : 'main-play'}
+            className={isPlayingSound ? 'main-pause' : 'main-play'}
             onClick={() => {
-              props.setCurrentlyPlaying('https://rainymood.com/audio1110/0.m4a');
+              setCurrentlyPlaying('https://rainymood.com/audio1110/0.m4a');
               playOrPauseAudio()}}
           ></button>
           <input
