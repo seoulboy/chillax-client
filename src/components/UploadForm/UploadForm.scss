@@ -4,11 +4,12 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
+  border-radius: 30px;
+  background-image: linear-gradient(to bottom right, #e5846e, #856170);
   form {
     display: block;
     padding: 30px;
-    color: black;
+    color: white;
 
     .sound-thumbnail-input-container {
       display: inline-block;
@@ -33,6 +34,7 @@
         position: absolute;
         left: 25%;
         bottom: 15%;
+        color: black;
       }
     }
     .type-label {
@@ -45,12 +47,10 @@
         font-size: 15px;
         #replace-image-button {
           margin: 5px 46px;
+          color: black;
         }
         #upload-thumbnail {
           display: none;
-        }
-        #title-input {
-          width: 90%;
         }
       }
     }
@@ -89,6 +89,12 @@
     resize: none;
     width: 100%;
     height: auto;
+    color: black;
+  }
+
+  #title-input {
+    width: 90%;
+    color: black;
   }
   .required-field {
     color: orange;

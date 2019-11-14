@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import './Browse.scss';
-import { getSoundsBrowsePage } from '../../actions/soundActions';
 import {
-  getLikedSounds,
-  handleUnlike,
-  handleLike,
-} from '../../actions/likedSoundActions';
+  getSoundsBrowsePage,
+  loadMoreSounds,
+} from '../../actions/soundActions';
+import { getLikedSounds } from '../../actions/likedSoundActions';
 import { getListeningHistory } from '../../actions/listeningHistoryActions';
 
 import LikesAndListenHistory from '../LikesAndListenHistory';
@@ -17,7 +16,6 @@ import { Icon } from 'antd';
 import { titleCase } from '../../utils';
 
 const Browse = props => {
-  const [soundPlayedJustBefore, setSoundPlayedJustBefore] = useState('');
   const [showSoundModal, setShowSoundModal] = useState(false);
   const [currentlyViewingSound, setCurrentlyViewingSound] = useState(null);
 
@@ -26,7 +24,6 @@ const Browse = props => {
   const discoverSoundsContainer = useRef(null);
   const mostListenedSoundsContainer = useRef(null);
 
-  const headerNavList = ['All', 'Sounds', 'Soundscapes'];
   const likedSoundIds = props.user.likedSounds;
 
   useEffect(() => {
@@ -35,25 +32,22 @@ const Browse = props => {
     }
   }, [props.user]);
 
-  const renderHeaderButtons = headerNavList.map(item => {
-    return <li key={item}>{item}</li>;
-  });
-
   const playOrPauseAudio = soundUrl => {
-    if (props.isPlayingSound) {
-      if (soundPlayedJustBefore === soundUrl) {
-        props.pauseSound();
-      } else {
-        setSoundPlayedJustBefore(soundUrl);
-      }
+    const thisSoundPlaying = props.isPlayingSound.some(url => {
+      return url == soundUrl;
+    });
+
+    if (thisSoundPlaying) {
+      props.pauseSound(soundUrl);
     } else {
-      setSoundPlayedJustBefore(soundUrl);
-      props.playSound();
+      props.playSound(soundUrl);
     }
   };
 
   const isPlayingThisSound = soundUrl => {
-    return props.currentlyPlaying === soundUrl;
+    return props.isPlayingSound.some(url => {
+      return url == soundUrl;
+    });
   };
 
   const scrollLeftOrRight = (listName, direction) => {
@@ -109,6 +103,29 @@ const Browse = props => {
         <p className='list-name-heading'>{titleCase(listName)}</p>
         <div
           className={`browse-sound-container`}
+          onScroll={() => {
+            var listElm;
+            if (listName === 'most-popular') {
+              listElm = mostPopularSoundsContainer.current;
+            } else if (listName === 'most-listened') {
+              listElm = mostListenedSoundsContainer.current;
+            } else if (listName === 'discover-sounds') {
+              listElm = discoverSoundsContainer.current;
+            } else if (listName === 'recent-uploads') {
+              listElm = recentlyUploadedSoundsContainer.current;
+            }
+            if (
+              listElm.scrollLeft + listElm.clientWidth >=
+              listElm.scrollWidth
+            ) {
+              props.loadMoreSounds(
+                props.user._id,
+                undefined,
+                listName,
+                soundList.length
+              );
+            }
+          }}
           ref={
             listName === 'most-popular'
               ? mostPopularSoundsContainer
@@ -150,21 +167,25 @@ const Browse = props => {
                   />
                   <button
                     className={
-                      isPlayingThisSound(sound.url[0].soundUrl) &&
-                      props.isPlayingSound
+                      isPlayingThisSound(sound.url[0].soundUrl)
                         ? 'play-button pause'
                         : 'play-button play'
                     }
                     onClick={() => {
-                      playOrPauseAudio(sound.url[0].soundUrl);
-                      if (props.currentlyPlaying !== sound.url[0].soundUrl) {
+                      if (
+                        !props.currentlyPlaying.some(
+                          playingSound =>
+                            playingSound.url[0].soundUrl ==
+                            sound.url[0].soundUrl
+                        )
+                      ) {
                         updateListeningHistory(sound._id, props.user._id);
-                        props.setCurrentlyPlaying(sound.url[0].soundUrl);
+                        props.setCurrentlyPlaying(sound);
                       }
+                      playOrPauseAudio(sound.url[0].soundUrl);
                     }}
                   ></button>
                 </div>
-                {renderPrevAndNextButtons(listName)}
                 <p
                   className='sound-title'
                   onClick={() => {
@@ -179,51 +200,51 @@ const Browse = props => {
             );
           })}
         </div>
+        {renderPrevAndNextButtons(listName)}
       </div>
     );
   };
 
   return (
-    <div className='browse-page-container'>
-      <div className='browse-page-header'>
-        <ul>{renderHeaderButtons}</ul>
+    <div className='browse-page-container-backdrop'>
+      <div className='browse-page-container'>
+        <div id='list-container'>
+          {renderMainLists(props.discoverSounds, 'discover-sounds')}
+          {renderMainLists(props.mostPopular, 'most-popular')}
+          {renderMainLists(props.recentUpload, 'recent-uploads')}
+          {renderMainLists(props.mostListened, 'most-listened')}
+        </div>
+        <LikesAndListenHistory
+          user={props.user}
+          likedSounds={props.likedSounds}
+          listeningHistory={props.listeningHistory}
+          getLikedSounds={() => props.getLikedSounds(props.user._id)}
+          getListeningHistory={() => props.getListeningHistory(props.user._id)}
+          isPlayingThisSound={isPlayingThisSound}
+          isPlayingSound={props.isPlayingSound}
+          playOrPauseAudio={playOrPauseAudio}
+          currentlyPlaying={props.currentlyPlaying}
+          updateListeningHistory={updateListeningHistory}
+          setCurrentlyPlaying={props.setCurrentlyPlaying}
+        />
+        {showSoundModal && (
+          <Modal
+            handleClose={() => setShowSoundModal(false)}
+            show={showSoundModal}
+          >
+            <SoundInfo
+              currentlyViewingSound={currentlyViewingSound}
+              isPlayingThisSound={isPlayingThisSound}
+              isPlayingSound={props.isPlayingSound}
+              playOrPauseAudio={playOrPauseAudio}
+              currentlyPlaying={props.currentlyPlaying}
+              updateListeningHistory={updateListeningHistory}
+              setCurrentlyPlaying={props.setCurrentlyPlaying}
+              user={props.user}
+            />
+          </Modal>
+        )}
       </div>
-      <div id='list-container'>
-        {renderMainLists(props.discoverSounds, 'discover-sounds')}
-        {renderMainLists(props.mostPopular, 'most-popular')}
-        {renderMainLists(props.recentUpload, 'recent-uploads')}
-        {renderMainLists(props.mostListened, 'most-listened')}
-      </div>
-      <LikesAndListenHistory
-        user={props.user}
-        likedSounds={props.likedSounds}
-        listeningHistory={props.listeningHistory}
-        getLikedSounds={() => props.getLikedSounds(props.user._id)}
-        getListeningHistory={() => props.getListeningHistory(props.user._id)}
-        isPlayingThisSound={isPlayingThisSound}
-        isPlayingSound={props.isPlayingSound}
-        playOrPauseAudio={playOrPauseAudio}
-        currentlyPlaying={props.currentlyPlaying}
-        updateListeningHistory={updateListeningHistory}
-        setCurrentlyPlaying={props.setCurrentlyPlaying}
-      />
-      {showSoundModal && (
-        <Modal
-          handleClose={() => setShowSoundModal(false)}
-          show={showSoundModal}
-        >
-          <SoundInfo
-            currentlyViewingSound={currentlyViewingSound}
-            isPlayingThisSound={isPlayingThisSound}
-            isPlayingSound={props.isPlayingSound}
-            playOrPauseAudio={playOrPauseAudio}
-            currentlyPlaying={props.currentlyPlaying}
-            updateListeningHistory={updateListeningHistory}
-            setCurrentlyPlaying={props.setCurrentlyPlaying}
-            user={props.user}
-          />
-        </Modal>
-      )}
     </div>
   );
 };
@@ -253,8 +274,7 @@ const mapDispatchToProps = {
   getSoundsBrowsePage,
   getLikedSounds,
   getListeningHistory,
-  handleLike,
-  handleUnlike,
+  loadMoreSounds,
 };
 
 export default connect(

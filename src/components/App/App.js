@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import Navbar from '../Navbar';
 import Home from '../Home';
 import Browse from '../Browse';
-import Library from '../Library';
+import SoundBoard from '../SoundBoard';
 import Modal from '../Modal';
 import UploadForm from '../UploadForm';
 import AudioPlayer from '../AudioPlayer';
@@ -19,10 +19,26 @@ import {
   changeVolume,
   uploadSound,
   setCurrentlyPlaying,
+  deleteCurrentlyPlaying,
 } from '../../actions/soundActions';
+import { handleUnlike, handleLike } from '../../actions/likedSoundActions';
 
 const App = props => {
   const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const renderAudioPlayers = () => {
+    return props.currentlyPlaying.map(sound => {
+      return (
+        <AudioPlayer
+          key={sound._id}
+          isPlayingSound={props.isPlayingSound}
+          volume={props.volume}
+          currentlyPlaying={sound}
+          isPlayingSound={props.isPlayingSound}
+        />
+      );
+    });
+  };
 
   return (
     <Router>
@@ -41,6 +57,7 @@ const App = props => {
             />
           )}
         />
+        {!props.isAuthenticated && <Redirect from='/browse' to='/home' />}
         <Route
           path='/browse'
           render={() => (
@@ -52,10 +69,11 @@ const App = props => {
               changeVolume={props.changeVolume}
               setCurrentlyPlaying={props.setCurrentlyPlaying}
               currentlyPlaying={props.currentlyPlaying}
+              handleLike={props.handleLike}
+              handleUnlike={props.handleUnlike}
             />
           )}
         />
-        <Route path='/library' component={Library} />
         <Route path='/*' component={() => <h1>Not Found</h1>} />
       </Switch>
       {showUploadModal && (
@@ -71,11 +89,18 @@ const App = props => {
           />
         </Modal>
       )}
-      <AudioPlayer
-        isPlayingSound={props.isPlayingSound}
-        volume={props.volume}
+      {props.user.likedSounds && <SoundBoard
+        user={props.user}
         currentlyPlaying={props.currentlyPlaying}
-      />
+        deleteCurrentlyPlaying={props.deleteCurrentlyPlaying}
+        setCurrentlyPlaying={props.setCurrentlyPlaying}
+        isPlayingSound={props.isPlayingSound}
+        playSound={props.playSound}
+        pauseSound={props.pauseSound}
+        handleUnlike={props.handleUnlike}
+        handleLike={props.handleLike}
+      />}
+      {renderAudioPlayers()}
     </Router>
   );
 };
@@ -84,6 +109,7 @@ const mapStateToProps = state => ({
   volume: state.playerReducer.volume,
   currentlyPlaying: state.playerReducer.currentlyPlaying,
   user: state.userReducer.user,
+  isAuthenticated: state.userReducer.authenticated,
 });
 
 const mapDispatchToProps = {
@@ -92,6 +118,9 @@ const mapDispatchToProps = {
   changeVolume,
   uploadSound,
   setCurrentlyPlaying,
+  deleteCurrentlyPlaying,
+  handleLike,
+  handleUnlike,
 };
 
 export default connect(

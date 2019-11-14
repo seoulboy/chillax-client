@@ -3,14 +3,20 @@ import { useDebounce } from '../../utils';
 const axios = require('axios');
 require('./Home.scss');
 
-const Home = ({changeVolume, pauseSound, playSound, isPlayingSound, setCurrentlyPlaying}) => {
+const Home = ({
+  changeVolume,
+  pauseSound,
+  playSound,
+  isPlayingSound,
+  setCurrentlyPlaying,
+}) => {
   // TODO: debouncer works correctly, but the home component still gets rendered too often.
   const [volume, setVolume] = useState('');
   const [showTodaysMusicPlayer, setShowTodaysMusicPlayer] = useState(false);
   const [todaysMusicTitle, setTodaysMusicTitle] = useState('');
   const debouncedVolume = useDebounce(volume, 300);
   const todaysMusicVideoId = '7ZguAEoNpZw';
-  
+
   useEffect(() => {
     const options = {
       url: 'https://www.googleapis.com/youtube/v3/videos',
@@ -34,12 +40,22 @@ const Home = ({changeVolume, pauseSound, playSound, isPlayingSound, setCurrently
     }
   }, [changeVolume, debouncedVolume]);
 
-  const playOrPauseAudio = () => {
-    if (isPlayingSound) {
-      pauseSound();
+  const playOrPauseAudio = soundUrl => {
+    const thisSoundPlaying = isPlayingSound.some(url => {
+      return url == soundUrl;
+    });
+
+    if (thisSoundPlaying) {
+      pauseSound(soundUrl);
     } else {
-      playSound();
+      playSound(soundUrl);
     }
+  };
+
+  const isPlayingThisSound = soundUrl => {
+    return isPlayingSound.some(url => {
+      return url == soundUrl;
+    });
   };
 
   return (
@@ -48,10 +64,26 @@ const Home = ({changeVolume, pauseSound, playSound, isPlayingSound, setCurrently
         <div id='default-audioplayer-skin'>
           <button
             id='main-play-button'
-            className={isPlayingSound ? 'main-pause' : 'main-play'}
+            className={
+              isPlayingThisSound('https://rainymood.com/audio1110/0.m4a')
+                ? 'main-pause'
+                : 'main-play'
+            }
             onClick={() => {
-              setCurrentlyPlaying('https://rainymood.com/audio1110/0.m4a');
-              playOrPauseAudio()}}
+              setCurrentlyPlaying({
+                url: [
+                  {
+                    soundUrl: 'https://rainymood.com/audio1110/0.m4a',
+                    thumbnailUrl:
+                      'https://project-jinjung.s3.ap-northeast-2.amazonaws.com/thumbnails/icon.png',
+                  },
+                ],
+                title: 'rainymood.com',
+                uploader: '',
+                _id: 'rainymood',
+              });
+              playOrPauseAudio('https://rainymood.com/audio1110/0.m4a');
+            }}
           ></button>
           <input
             id='range-volume'

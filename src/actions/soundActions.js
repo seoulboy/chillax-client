@@ -4,7 +4,9 @@ export const PLAY_SOUND = 'PLAY_SOUND';
 export const PAUSE_SOUND = 'PAUSE_SOUND';
 export const CHANGE_VOLUME = 'CHANGE_VOLUME';
 export const SET_CURRENTLY_PLAYING = 'SET_CURRENTLY_PLAYING';
+export const DELETE_CURRENTLY_PLAYING = 'DELETE_CURRENTLY_PLAYING';
 export const UPLOAD_SOUND_SUCCESS = 'UPLOAD_SOUND_SUCCESS';
+export const LOAD_MORE_SOUNDS_SUCCESS = 'LOAD_MORE_SOUNDS_SUCCESS';
 
 export const FETCH_SOUNDS_BROWSE_BEGIN = 'FETCH_SOUNDS_BROWSE_BEGIN';
 export const FETCH_SOUNDS_BROWSE_SUCCESS = 'FETCH_SOUNDS_BROWSE_SUCCESS';
@@ -17,12 +19,14 @@ const handleErrors = response => {
   return response.json();
 };
 
-export const playSound = () => ({
+export const playSound = url => ({
   type: PLAY_SOUND,
+  payload: { url },
 });
 
-export const pauseSound = () => ({
+export const pauseSound = url => ({
   type: PAUSE_SOUND,
+  payload: { url },
 });
 
 export const changeVolume = volume => ({
@@ -46,6 +50,41 @@ export const getSoundsBrowseFailure = error => ({
   payload: { error },
 });
 
+export const loadMoreSoundsSuccess = (sounds, loadItem) => ({
+  type: LOAD_MORE_SOUNDS_SUCCESS,
+  payload: { sounds, loadItem },
+});
+
+export const loadMoreSounds = (userId, type = '', loadItem, currentIndex) => {
+  const url = new URL(`${SERVER_URL}/users/${userId}/sounds/`);
+  const params = {
+    type: type,
+    load_item: loadItem.split('-').join('_'),
+    current_index: currentIndex,
+  };
+
+  url.search = new URLSearchParams(params).toString();
+
+  const options = {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Credentials': 'true',
+    },
+  };
+
+  return dispatch => {
+    return fetch(url, options)
+      .then(handleErrors)
+      .then(res => {
+        dispatch(loadMoreSoundsSuccess(res, loadItem));
+      })
+      .catch(error => console.error(error));
+  };
+};
+
 export const getSoundsBrowsePage = (userId, type = '') => {
   const url = new URL(`${SERVER_URL}/users/${userId}/sounds/`);
   const params = {
@@ -54,7 +93,6 @@ export const getSoundsBrowsePage = (userId, type = '') => {
     most_popular: 'true',
     most_listened: 'true',
     discover_sounds: 'true',
-
   };
 
   url.search = new URLSearchParams(params).toString();
@@ -72,7 +110,6 @@ export const getSoundsBrowsePage = (userId, type = '') => {
     })
       .then(handleErrors)
       .then(res => {
-        console.log('getSoundsBrowsePage', res);
         dispatch(getSoundsBrowseSuccess(res));
         return res;
       })
@@ -80,10 +117,17 @@ export const getSoundsBrowsePage = (userId, type = '') => {
   };
 };
 
-export const setCurrentlyPlaying = url => ({
+export const setCurrentlyPlaying = sound => ({
   type: SET_CURRENTLY_PLAYING,
   payload: {
-    url,
+    sound,
+  },
+});
+
+export const deleteCurrentlyPlaying = sound => ({
+  type: DELETE_CURRENTLY_PLAYING,
+  payload: {
+    sound,
   },
 });
 

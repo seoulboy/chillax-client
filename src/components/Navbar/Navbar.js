@@ -4,13 +4,20 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import { fetchUser, logoutUser } from '../../actions/userActions';
 import { SERVER_URL } from '../../constants';
+import { Icon } from 'antd';
 
-const Navbar = ({fetchUser, logoutUser, isAuthenticated, displayUploadModal, location}) => {
+const Navbar = ({
+  fetchUser,
+  logoutUser,
+  isAuthenticated,
+  displayUploadModal,
+  location,
+}) => {
   useEffect(() => {
     fetchUser();
   }, [fetchUser]);
 
-  const routes = ['home', 'browse', 'library'];
+  const routes = ['home', 'browse'];
 
   const handleGoogleSignInClick = () => {
     window.open(`${SERVER_URL}/auth/google`, '_self');
@@ -25,36 +32,51 @@ const Navbar = ({fetchUser, logoutUser, isAuthenticated, displayUploadModal, loc
   return (
     <div className='nav-container'>
       <ul>
+        <li className='logo-text'>
+          Chillax
+        </li>
         {routes.map(route => {
           const path = '/' + route;
-          return (
-            <li
-              className={
-                location.pathname === path
-                  ? 'nav-menu-selected'
-                  : 'nav-menu'
-              }
-              key={route}
-            >
-              <Link to={route}>{route}</Link>
-            </li>
-          );
+          if (route === 'browse') {
+            return (
+              isAuthenticated && (
+                <li
+                  className={
+                    location.pathname === path
+                      ? 'nav-menu-selected'
+                      : 'nav-menu'
+                  }
+                  key={route}
+                >
+                  <Link to={route}><Icon type="customer-service" /></Link>
+                </li>
+              )
+            );
+          } else {
+            return (
+              <li
+                className={
+                  location.pathname === path ? 'nav-menu-selected' : 'nav-menu'
+                }
+                key={route}
+              >
+                <Link to={route}><Icon type="home" /></Link>
+              </li>
+            );
+          }
         })}
         {isAuthenticated && (
-          <li
-            className='show-upload-modal-button'
-            onClick={displayUploadModal}
-          >
-            Upload
+          <li className='show-upload-modal-button' onClick={displayUploadModal}>
+          <Icon type="cloud-upload" />
           </li>
         )}
         {isAuthenticated ? (
           <li className='sign-in-out' onClick={handleLogoutClick}>
-            Sign out
+            Logout
           </li>
         ) : (
           <li className='sign-in-out' onClick={handleGoogleSignInClick}>
-            Sign in using Google+
+            Login
           </li>
         )}
       </ul>

@@ -121,15 +121,11 @@ const UploadForm = props => {
 
   const clearInputFields = () => {
     whiteNoiseRadioBtn.current.checked = false;
-    soundScapeRadioBtn.current.checked = false;
     thumbnailInput.current.value = null;
     audioInput.current.value = null;
     setPreviewSrc('//:0');
   };
 
-  // TODO:
-  // upload multiple sounds (ONLY FOUR!!!)
-  // loading animation when file is being uploaded.
   return (
     <div className='form-container'>
       <form
@@ -151,19 +147,7 @@ const UploadForm = props => {
             />
             <span>white noise</span>
           </label>
-          <label className='type-label'>
-            <input
-              ref={soundScapeRadioBtn}
-              type='radio'
-              name='type'
-              value='soundscape'
-              onChange={e => {
-                setType(e.target.value);
-                audioInput.current.value = '';
-              }}
-            />
-            <span>soundscape</span>
-          </label>
+          
 
           <label
             htmlFor='upload-sound'

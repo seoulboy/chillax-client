@@ -3,6 +3,7 @@ import {
   FETCH_SOUNDS_BROWSE_SUCCESS,
   FETCH_SOUNDS_BROWSE_FAILURE,
   UPLOAD_SOUND_SUCCESS,
+  LOAD_MORE_SOUNDS_SUCCESS,
 } from '../actions/soundActions';
 
 import {
@@ -58,6 +59,37 @@ const soundsReducer = (state = initialState, action) => {
     case FETCH_LISTENING_HISTORY_SUCCESS: {
       // console.log('aciton', action.payload)
       return { ...state, history: action.payload.listeningHistory };
+    }
+    case LOAD_MORE_SOUNDS_SUCCESS: {
+      console.log(action.payload);
+      if (action.payload.loadItem === 'most-popular') {
+        const newSoundList = state.most_popular.concat(
+          action.payload.sounds.most_popular
+        );
+        return {
+          ...state,
+          most_popular: newSoundList,
+        };
+      }
+      if (action.payload.loadItem === 'recent-uploads') {
+        const newSoundList = state.recent_upload.concat(
+          action.payload.sounds.recent_upload
+        );
+        return {
+          ...state,
+          recent_upload: newSoundList,
+        };
+      }
+      if (action.payload.loadItem === 'most-listened') {
+        console.log(action.payload);
+        const newSoundList = state.most_listened.concat(
+          action.payload.sounds.most_listened
+        );
+        return {
+          ...state,
+          most_listened: newSoundList,
+        };
+      }
     }
     default:
       return state;

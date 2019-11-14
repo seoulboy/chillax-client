@@ -38,11 +38,16 @@ const LikesAndListenHistory = ({
                 : 'play-button play'
             }
             onClick={() => {
-              playOrPauseAudio(sound.url[0].soundUrl);
-              if (currentlyPlaying !== sound.url[0].soundUrl) {
+              if (
+                !currentlyPlaying.some(
+                  playingSound =>
+                    playingSound.url[0].soundUrl == sound.url[0].soundUrl
+                )
+              ) {
                 updateListeningHistory(sound._id, user._id);
-                setCurrentlyPlaying(sound.url[0].soundUrl);
+                setCurrentlyPlaying(sound);
               }
+              playOrPauseAudio(sound.url[0].soundUrl);
             }}
           ></button>
           <div className='card-info'>
@@ -72,11 +77,16 @@ const LikesAndListenHistory = ({
                 : 'play-button play'
             }
             onClick={() => {
-              playOrPauseAudio(sound.url[0].soundUrl);
-              if (currentlyPlaying !== sound.url[0].soundUrl) {
+              if (
+                !currentlyPlaying.some(
+                  playingSound =>
+                    playingSound.url[0].soundUrl == sound.url[0].soundUrl
+                )
+              ) {
                 updateListeningHistory(sound._id, user._id);
-                setCurrentlyPlaying(sound.url[0].soundUrl);
+                setCurrentlyPlaying(sound);
               }
+              playOrPauseAudio(sound.url[0].soundUrl);
             }}
           ></button>
           <div className='card-info'>

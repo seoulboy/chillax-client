@@ -1,12 +1,18 @@
 $sound-item-width: 170px;
 $play-button-width-height: 70px;
 
+.browse-page-container-backdrop {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.413);
+}
 .browse-page-container {
   width: 72%;
   border: 1px solid #707070;
   margin: 0 auto;
   padding: 20px 45px;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.413);
+
   .browse-page-header {
     ul {
       display: flex;
@@ -22,13 +28,16 @@ $play-button-width-height: 70px;
     width: 47%;
     min-width: 775px;
     display: inline-block;
+    height: 803px;
+    overflow-y: scroll;
+    overflow-x: hidden;
     .list-name-heading {
       font-size: 22px;
       line-height: 30px;
       border-bottom: 2.2px solid white;
     }
     .button {
-      width: 30px;
+      width: 20px;
       height: 30px;
       line-height: 30px;
       position: absolute;
@@ -45,10 +54,10 @@ $play-button-width-height: 70px;
       }
     }
     .button-prev {
-      left: -1%;
+      left: 0%;
     }
     .button-next {
-      right: -1%;
+      right: 0%;
     }
     #most-popular {
       position: relative;
@@ -128,5 +137,12 @@ $play-button-width-height: 70px;
       visibility: hidden;
       width: 0px;
     }
+  }
+
+  #list-container::-webkit-scrollbar {
+    display: none; /* Might be enough */
+    background: transparent;
+    visibility: hidden;
+    width: 0px;
   }
 }

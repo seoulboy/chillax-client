@@ -7,7 +7,6 @@ const ViewAll = ({
   user,
   viewingAll,
   isPlayingThisSound,
-  isPlayingSound,
   playOrPauseAudio,
   currentlyPlaying,
   updateListeningHistory,
@@ -41,7 +40,7 @@ const ViewAll = ({
               setSelectedSound(sound);
               playOrPauseAudio(sound.url[0].soundUrl);
               updateListeningHistory(sound._id, user._id);
-              setCurrentlyPlaying(sound.url[0].soundUrl);
+              setCurrentlyPlaying(sound);
             }}
           >
             <span className='viewall-uploader'>{sound.uploader.name}</span>
@@ -70,14 +69,22 @@ const ViewAll = ({
         {selectedSound && (
           <button
             className={
-              isPlayingSound ? 'play-button pause' : 'play-button play'
+              isPlayingThisSound(selectedSound.url[0].soundUrl)
+                ? 'play-button pause'
+                : 'play-button play'
             }
             onClick={() => {
-              playOrPauseAudio(selectedSound.url[0].soundUrl);
-              if (currentlyPlaying !== selectedSound.url[0].soundUrl) {
+              if (
+                !currentlyPlaying.some(
+                  playingSound =>
+                    playingSound.url[0].soundUrl ==
+                    selectedSound.url[0].soundUrl
+                )
+              ) {
                 updateListeningHistory(selectedSound._id, user._id);
-                setCurrentlyPlaying(selectedSound.url[0].soundUrl);
+                setCurrentlyPlaying(selectedSound);
               }
+              playOrPauseAudio(selectedSound.url[0].soundUrl);
             }}
           ></button>
         )}

@@ -28,21 +28,17 @@ const SoundInfo = props => {
                 : 'play-button play'
             }
             onClick={() => {
-              props.playOrPauseAudio(
-                props.currentlyViewingSound.url[0].soundUrl
-              );
               if (
-                props.currentlyPlaying !==
-                props.currentlyViewingSound.url[0].soundUrl
+                !props.currentlyPlaying.some(
+                  playingSound =>
+                    playingSound.url[0].soundUrl ==
+                    props.currentlyViewingSound.url[0].soundUrl
+                )
               ) {
-                props.updateListeningHistory(
-                  props.currentlyViewingSound._id,
-                  props.user._id
-                );
-                props.setCurrentlyPlaying(
-                  props.currentlyViewingSound.url[0].soundUrl
-                );
+                props.updateListeningHistory(props.currentlyViewingSound._id, props.user._id);
+                props.setCurrentlyPlaying(props.currentlyViewingSound);
               }
+              props.playOrPauseAudio(props.currentlyViewingSound.url[0].soundUrl);
             }}
           ></button>
           <div>
