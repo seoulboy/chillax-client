@@ -1,0 +1,112 @@
+$text-color: white;
+
+#home-main-container {
+  #center-block {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    #default-audioplayer-skin {
+      margin: 0 auto;
+      max-width: 300px;
+
+      #main-play-button {
+        height: 130px;
+        width: 130px;
+        border: none;
+        display: block;
+        margin: 0 auto;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-position: center;
+        outline: none;
+      }
+
+      .main-play {
+        background: url('https://rainymood.com/i/play4.png');
+      }
+
+      .main-pause {
+        background: url('https://rainymood.com/i/pause4.png');
+      }
+
+      input[type='range'] {
+        display: block;
+        -webkit-appearance: none;
+        height: 34px;
+        margin: 0 auto;
+        width: 50%;
+        background: transparent;
+
+        &:focus {
+          outline: none;
+        }
+        &::-webkit-slider-runnable-track {
+          width: 100%;
+          height: 3px;
+          cursor: pointer;
+          background: white;
+          border-radius: 5px;
+          border-right: none;
+          border-left: none;
+        }
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          height: 16px;
+          width: 16px;
+          border-radius: 23px;
+          background: white;
+          cursor: pointer;
+          margin-top: -7px;
+        }
+      }
+    }
+
+    $text-font-faily: 'Shadows Into Light', cursive;
+      // font-family: 'Playfair Display', serif;
+
+
+    .home-content-container {
+      text-align: center;
+      h1 {
+        margin: 0;
+        color: $text-color;
+        font-size: 90px;
+        font-family: 'Caveat', cursive;
+      }
+      p {
+        // font-family: 'Indie Flower', cursive;
+        font-size: 25px;
+        font-family: $text-font-faily;
+        font-weight: regular;
+      }
+    }
+
+    .todays-music {
+      color: $text-color;
+      text-align: center;
+      font-family: $text-font-faily;
+      text-transform: uppercase;
+      font-size: 22px;
+      .back-button-chillax {
+        font-family: 'Caveat', cursive;
+      }
+      button {
+        background: none;
+        border: none;
+        text-decoration: underline;
+        font-weight: bolder;
+      }
+    }
+
+    .video-container {
+      .video-wrapper {
+        iframe {
+          margin: 0 auto;
+          display: block;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,50 @@
+$text-color: white;
+
+.nav-container {
+  background: rgba(0, 0, 0, 0.413);
+
+  ul {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0 auto;
+    list-style: none;
+    position: relative;
+    align-items: center;
+
+    .logo-text {
+      font-family: 'Caveat', cursive;
+      text-transform: inherit;
+      position: absolute;
+      left: 0px;
+      margin: 0 17px;
+    }
+    .nav-menu-selected {
+      text-decoration: underline;
+    }
+    li {
+      margin: 0 30px;
+      display: inline-block;
+      color: $text-color;
+      text-transform: uppercase;
+      font-family: 'Shadows Into Light', cursive;
+      font-size: 26px;
+      padding: 0 10px;
+      border-radius: 5px;
+      a {
+        color: $text-color;
+      }
+    }
+    .sign-in-out {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      text-transform: inherit;
+      padding: 0 10px;
+      background: rgba(179, 252, 208, 0.509);
+      border-radius: 5px;
+      position: absolute;
+      right: 0px;
+      font-size: 18px;
+      margin: 0 10px;
+    }
+  }
+}

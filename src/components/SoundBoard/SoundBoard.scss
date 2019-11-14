@@ -1,0 +1,95 @@
+$img-width-and-height: 40px;
+$play-button-width-height: 30px;
+
+.soundboard-container {
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  bottom: 0px;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.413);
+
+  .soundboard-inner-container {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: rgba(0, 0, 0, 0.543);
+    border-radius: 10px;
+  }
+  .soundboard-card {
+    display: flex;
+    margin: 0 10px;
+    &:hover {
+      .soundboard-card-detail {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .soundboard-image-container {
+      position: relative;
+      img {
+        width: $img-width-and-height;
+        height: $img-width-and-height;
+        border-radius: 10px;
+      }
+
+      .play-button {
+        height: $play-button-width-height;
+        width: $play-button-width-height;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        display: none;
+        border: none;
+        outline: none;
+      }
+
+      .play {
+        background: url('https://rainymood.com/i/play4.png');
+        background-size: $play-button-width-height $play-button-width-height;
+      }
+
+      .pause {
+        background: url('https://rainymood.com/i/pause4.png');
+        background-size: $play-button-width-height $play-button-width-height;
+      }
+
+      &:hover .play-button {
+        display: block;
+      }
+    }
+
+    .soundboard-card-detail {
+      display: none;
+      position: absolute;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.8);
+      bottom: 45px;
+      padding: 10px 20px;
+      max-width: 250px;
+
+      &:hover {
+        display: flex;
+        align-items: center;
+      }
+      .soundboard-like-button {
+        font-size: 20px;
+        margin-right: 15px;
+      }
+      p {
+        margin-bottom: 0;
+      }
+      .soundboard-card-uploader {
+        font-size: 10px;
+        color: grey;
+      }
+      .soundboard-close-card {
+        position: absolute;
+        bottom: -13px;
+        left: 32px;
+      }
+    }
+  }
+}
