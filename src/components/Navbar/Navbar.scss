@@ -35,6 +35,21 @@ $text-color: white;
         color: $text-color;
       }
     }
+    .user-profile {
+      display: flex;
+      position: absolute;
+      right: 70px;
+      img {
+        width: 30px;
+        height: 30px;
+        border-radius: 30px;
+      }
+      span {
+        margin: 0 8px;
+        text-transform: initial;
+        font-size: 20px;
+      }
+    }
     .sign-in-out {
       font-family: Verdana, Geneva, Tahoma, sans-serif;
       text-transform: inherit;

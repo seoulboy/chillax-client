@@ -134,6 +134,9 @@ const UploadForm = props => {
         encType='multipart/form-data'
       >
         <div className='sound-thumbnail-input-container'>
+        <span>Select the type of sound you would like to upload:</span>
+        <br/>
+
           <label className='type-label'>
             <input
               ref={whiteNoiseRadioBtn}
@@ -145,7 +148,7 @@ const UploadForm = props => {
                 audioInput.current.value = '';
               }}
             />
-            <span>white noise</span>
+            <span className='white-noise-text'>white noise</span>
           </label>
           
 

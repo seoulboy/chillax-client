@@ -12,6 +12,7 @@ const Navbar = ({
   isAuthenticated,
   displayUploadModal,
   location,
+  user,
 }) => {
   useEffect(() => {
     fetchUser();
@@ -32,9 +33,7 @@ const Navbar = ({
   return (
     <div className='nav-container'>
       <ul>
-        <li className='logo-text'>
-          Chillax
-        </li>
+        <li className='logo-text'>Chillax</li>
         {routes.map(route => {
           const path = '/' + route;
           if (route === 'browse') {
@@ -48,7 +47,9 @@ const Navbar = ({
                   }
                   key={route}
                 >
-                  <Link to={route}><Icon type="customer-service" /></Link>
+                  <Link to={route}>
+                    <Icon type='customer-service' />
+                  </Link>
                 </li>
               )
             );
@@ -60,14 +61,23 @@ const Navbar = ({
                 }
                 key={route}
               >
-                <Link to={route}><Icon type="home" /></Link>
+                <Link to={route}>
+                  <Icon type='home' />
+                </Link>
               </li>
             );
           }
         })}
         {isAuthenticated && (
           <li className='show-upload-modal-button' onClick={displayUploadModal}>
-          <Icon type="cloud-upload" />
+            <Icon type='cloud-upload' />
+          </li>
+        )}
+
+        {isAuthenticated && (
+          <li className='user-profile'>
+            <img src={user.thumbnail} alt={user.name} />
+            <span>{user.name}</span>
           </li>
         )}
         {isAuthenticated ? (
@@ -94,9 +104,4 @@ const mapDispatchToProps = {
   logoutUser,
 };
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(Navbar)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Navbar));
