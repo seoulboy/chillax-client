@@ -36,13 +36,15 @@
       "not dead",
       "not op_mini all"
     ],
-    "jest": {
-      "snapshotSerializers": ["enzyme-to-json/serializer"]
-    },
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
     ]
   },
   "devDependencies": {

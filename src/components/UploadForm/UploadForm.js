@@ -16,6 +16,9 @@ const UploadForm = props => {
   const whiteNoiseRadioBtn = useRef(null);
   const soundScapeRadioBtn = useRef(null);
 
+  const defaultThumbnailUrl =
+    'https://project-jinjung.s3.ap-northeast-2.amazonaws.com/thumbnails/chillaxdefault.jpg';
+
   useEffect(() => {
     if (!props.showUploadModal) {
       setTitle('');
@@ -53,8 +56,14 @@ const UploadForm = props => {
           props.uploadSound(formData, props.user._id);
           alert('upload successful!');
         });
-    } else {
+    } else if (props.user.thumbnail) {
       formData.append('defaultImage', props.user.thumbnail);
+      props.uploadSound(formData, props.user._id);
+      alert('upload successful!');
+    } else {
+      const defaultImage = new Image();
+      defaultImage.src = defaultThumbnailUrl;
+      formData.append('defaultImage', defaultImage);
       props.uploadSound(formData, props.user._id);
       alert('upload successful!');
     }
@@ -134,8 +143,8 @@ const UploadForm = props => {
         encType='multipart/form-data'
       >
         <div className='sound-thumbnail-input-container'>
-        <span>Select the type of sound you would like to upload:</span>
-        <br/>
+          <span>Select the type of sound you would like to upload:</span>
+          <br />
 
           <label className='type-label'>
             <input
@@ -150,7 +159,6 @@ const UploadForm = props => {
             />
             <span className='white-noise-text'>white noise</span>
           </label>
-          
 
           <label
             htmlFor='upload-sound'
