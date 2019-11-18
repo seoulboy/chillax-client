@@ -33,7 +33,7 @@ const Navbar = ({
   return (
     <div className='nav-container'>
       <ul>
-        <li className='logo-text'>Chillax</li>
+        <li className='logo-text'><Link to='/'>Chillax</Link></li>
         {routes.map(route => {
           const path = '/' + route;
           if (route === 'browse') {

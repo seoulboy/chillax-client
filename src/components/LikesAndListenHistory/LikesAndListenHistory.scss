@@ -25,6 +25,7 @@ $play-button-width-height: 40px;
         position: absolute;
         top: 12%;
         left: 2.5%;
+        cursor: pointer;
       }
 
       &:hover .play-button {
@@ -48,6 +49,7 @@ $play-button-width-height: 40px;
     border-bottom: 1px solid white;
     margin: 20px auto;
     padding-bottom: 5px;
+    cursor: pointer;
     span {
       float: right;
     }
@@ -55,6 +57,7 @@ $play-button-width-height: 40px;
   .card-info {
     display: inline-block;
     margin-left: 10px;
+    cursor: initial;
     p {
       margin: 0;
     }
@@ -71,7 +74,7 @@ $play-button-width-height: 40px;
     .history-uploader {
       font-size: 12px;
       color: grey;
-
+      
     }
   }
 }

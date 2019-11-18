@@ -100,6 +100,7 @@ $play-button-width-height: 70px;
             display: none;
             border: none;
             outline: none;
+            cursor: pointer;
           }
           &:hover .play-button {
             display: block;
@@ -123,10 +124,12 @@ $play-button-width-height: 70px;
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
           margin: 0;
+          cursor: pointer;
         }
         .sound-uploader {
           font-size: 12px;
           color: grey;
+          cursor: initial;
         }
       }
     }

@@ -107,7 +107,13 @@ const LikesAndListenHistory = ({
   return (
     <div id='likes-and-listen-history-container'>
       <div className='likes-container'>
-        <div className='card-header'>
+        <div
+          className='card-header'
+          onClick={() => {
+            setShowLikedOrHistoryModal(true);
+            setViewingAll('like');
+          }}
+        >
           <Icon type='heart' theme='filled' />{' '}
           {user.likedSounds ? user.likedSounds.length : 0} likes
           <span
@@ -124,7 +130,13 @@ const LikesAndListenHistory = ({
 
       <div className='listening-history-container'>
         <div className='listening-history-container'>
-          <div className='card-header'>
+          <div
+            className='card-header'
+            onClick={() => {
+              setShowLikedOrHistoryModal(true);
+              setViewingAll('history');
+            }}
+          >
             <Icon type='calendar' /> Listening History
             <span
               onClick={() => {
