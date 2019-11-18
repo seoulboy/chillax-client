@@ -7,9 +7,6 @@ import rootReducer from './reducers/rootReducer';
 import 'antd/dist/antd.css';
 import App from './components/App';
 import './index.scss';
-import Bugcide from 'bugcide';
-
-new Bugcide().init({ projectToken: 'chillax-RRMA2' });
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
