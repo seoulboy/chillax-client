@@ -54,7 +54,7 @@ const ViewAll = ({
         );
       });
     } else if (sounds.length === 0) {
-      return 'there are no liked sounds';
+      return 'There are no sounds to show! Listen or like sounds first!';
     }
   };
 
