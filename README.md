@@ -56,7 +56,25 @@ npm install
 npm start
 ```
 
-dot env 파일 만들고 그안에 추가작업들 가이드라인 작성하기
+chillax-server의 root 디렉토리 안에 '.dotenv' 파일명으로 작성한 파일 안에 아래의 ** **안 작성이 선행되어야 서버가 정상적으로 작동합니다.
+
+```
+DB_USER=**MongoDB userID**
+DB_PASS=**MongoDB password**
+SESSION_SECRET=**this can be any connected string**
+GOOGLE_CLIENT_ID=**Google API OAuth Client ID**
+GOOGLE_CLIENT_SECRET=**GOogle API OAuth Client Secret**
+FACEBOOK_CLIENT_ID=**Facebook API OAuth Client ID**
+FACEBOOK_CLIENT_SECRET=**Facebook API OAuth Client Seceret**
+GITHUB_CLIENT_ID=**Github API OAuth Client ID**
+GITHUB_CLIENT_SECRET=**Github API OAuth Client Secret**
+TWITTER_CLIENT_ID=**Twitter API OAuth Client ID**
+TWITTER_CLIENT_SECRET=**Twitter API OAuth Client Secret**
+AWS_SECRET_KEY=**AWS API Secret Key**
+AWS_ACCESS_KEY_ID=**AWS API Access Key ID**
+AWS_REGION=**AWS region**
+```
+
 
 ## Features
 
