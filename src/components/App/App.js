@@ -34,7 +34,6 @@ const App = props => {
           isPlayingSound={props.isPlayingSound}
           volume={props.volume}
           currentlyPlaying={sound}
-          isPlayingSound={props.isPlayingSound}
         />
       );
     });
