@@ -1,3 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<Modal /> matches snapshot 1`] = `ReactWrapper {}`;
+exports[`<Modal /> matches snapshot 1`] = `
+<Modal
+  handleClose={[MockFunction]}
+  show="true"
+>
+  <div
+    className="modal display-block"
+  >
+    <section
+      className="modal-main"
+    />
+  </div>
+</Modal>
+`;

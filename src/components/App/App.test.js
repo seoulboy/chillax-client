@@ -1,9 +1,18 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import { shallow } from 'enzyme';
+import { App } from './App';
 
-xit('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
-});
+describe('<App />', () => {
+  let component = null;
+  const user = { likedSounds: false};
+  const currentlyPlaying = [];
+
+  it('renders correctly', () => {
+    component = shallow(<App user={user} currentlyPlaying={currentlyPlaying} />);
+  })
+
+  it('matches snapshot', () => {
+    expect(component).toMatchSnapshot();
+  })
+
+})

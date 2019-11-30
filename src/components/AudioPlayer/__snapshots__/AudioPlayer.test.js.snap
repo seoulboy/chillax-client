@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AudioPlayer /> matches snapshot 1`] = `
+<div
+  className="audio-player"
+>
+  <audio
+    id="default-audioplayer"
+    loop={true}
+    preload="auto"
+    src=""
+  />
+</div>
+`;

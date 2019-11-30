@@ -23,7 +23,7 @@ import {
 } from '../../actions/soundActions';
 import { handleUnlike, handleLike } from '../../actions/likedSoundActions';
 
-const App = props => {
+export const App = props => {
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   const renderAudioPlayers = () => {
@@ -126,3 +126,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(App);
+
+

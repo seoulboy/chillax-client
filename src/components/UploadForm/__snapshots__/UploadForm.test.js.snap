@@ -1,3 +1,183 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<UploadForm /> matches snapshot 1`] = `ReactWrapper {}`;
+exports[`<UploadForm /> matches snapshot 1`] = `
+<UploadForm>
+  <div
+    className="form-container"
+  >
+    <form
+      className="upload-form"
+      encType="multipart/form-data"
+      onSubmit={[Function]}
+    >
+      <div
+        className="sound-thumbnail-input-container"
+      >
+        <span>
+          Select the type of sound you would like to upload:
+        </span>
+        <br />
+        <label
+          className="type-label"
+        >
+          <input
+            name="type"
+            onChange={[Function]}
+            type="radio"
+            value="white-noise"
+          />
+          <span
+            className="white-noise-text"
+          >
+            white noise
+          </span>
+        </label>
+        <label
+          className="invisible"
+          htmlFor="upload-sound"
+        >
+          <div>
+            <p
+              className="visible"
+            >
+              <br />
+              You can upload a single sound for white noise.
+              <br />
+            </p>
+            <p
+              className="invisible"
+            >
+              <br />
+              You can upload upto four sound for soundscape.
+              <br />
+            </p>
+            <input
+              accept="audio/*"
+              id="upload-sound"
+              multiple="multiple"
+              name="sound"
+              onChange={[Function]}
+              type="file"
+            />
+          </div>
+        </label>
+        <label
+          className="invisible"
+          htmlFor="upload-thumbnail"
+        >
+          <div
+            className="thumb"
+          >
+            <img
+              alt=""
+              id="thumbnail-preview"
+              src="//:0"
+            />
+            <button
+              className="visible"
+              onClick={[Function]}
+              type="button"
+            >
+              Upload image
+            </button>
+          </div>
+          <p>
+            <button
+              className="invisible"
+              id="replace-image-button"
+              onClick={[Function]}
+              type="button"
+            >
+              replace image
+            </button>
+            <input
+              accept="image/*"
+              id="upload-thumbnail"
+              name="image"
+              onChange={[Function]}
+              type="file"
+            />
+          </p>
+        </label>
+      </div>
+      <div
+        className="title-description-container"
+      >
+        <label
+          className="invisible"
+          htmlFor="title-input"
+        >
+          <span
+            className="required-field"
+          >
+            *
+          </span>
+          Title
+          <br />
+          <input
+            id="title-input"
+            name="title"
+            onChange={[Function]}
+            placeholder="enter title"
+            required={true}
+            type="text"
+            value=""
+          />
+        </label>
+        <label
+          className="invisible"
+          htmlFor="description-input"
+        >
+          <span
+            className="required-field"
+          >
+            *
+          </span>
+          Description
+          <br />
+          <textarea
+            cols="40"
+            id="description-input"
+            name="description"
+            onChange={[Function]}
+            placeholder="describe your sound here"
+            required={true}
+            rows="5"
+            value=""
+          />
+        </label>
+      </div>
+      <div
+        className="decision-buttons-container"
+      >
+        <div
+          className="invisible"
+        >
+          <span
+            className="required-field"
+          >
+            *
+          </span>
+          Required Fields
+          <div
+            className="save-cancel-button-container"
+          >
+            <button
+              id="cancel-button"
+              onClick={[Function]}
+              type="button"
+            >
+              Cancel
+            </button>
+            <input
+              id="save-button"
+              type="submit"
+              value="Save"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</UploadForm>
+`;

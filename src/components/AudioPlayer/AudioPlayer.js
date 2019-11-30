@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import './AudioPlayer.scss';
 
 const AudioPlayer = props => {
-  console.log(props.isPlayingSound);
 
   const audioElement = useRef(null);
 
